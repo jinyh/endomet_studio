@@ -12,7 +12,7 @@ let toastTimer,scene,lastFrame=performance.now(),paintTimer=0;
 document.querySelector('#app').innerHTML=`
 <div class="shell">
   <aside class="sidebar" aria-label="系统导航">
-    <div class="brand"><div class="brand-symbol">E</div><div><div class="brand-name">EndoLab</div><small>内分泌与代谢实验室</small></div></div>
+    <div class="brand"><div class="brand-symbol">E</div><div><div class="brand-name">EndoMet</div><small>STUDIO · 内分泌与代谢</small></div></div>
     <button class="side-button" data-view="overview"><span class="side-icon">▦</span>系统总览</button>
     <div class="nav-label">机制实验室 / SYSTEMS</div>
     ${modules.map((m,i)=>`<button class="side-button ${i===0?'active':''}" data-module="${m.id}" style="--color:${m.color}"><span class="side-icon">${m.icon}</span>${m.short}<span class="side-num">${String(i+1).padStart(2,'0')}</span></button>`).join('')}
@@ -65,7 +65,7 @@ function showView(view){
   if(!['lab','overview','course','knowledge','history'].includes(view))return;
   state.view=view;state.playing=false;document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id===`page-${view}`));document.querySelectorAll('.tab').forEach(el=>{el.classList.toggle('active',el.dataset.view===view);el.setAttribute('aria-current',el.dataset.view===view?'page':'false');});
   document.querySelectorAll('.side-button').forEach(el=>el.classList.toggle('active',view==='overview'?el.dataset.view==='overview':el.dataset.module===state.module.id));
-  $('#module-title').textContent=view==='overview'?'内分泌与代谢机制实验室':state.module.title;
+  $('#module-title').textContent=view==='overview'?'内分泌与代谢疾病实验室':state.module.title;
   $('#module-en').textContent=view==='overview'?'EXPLORE THE ENDOCRINE SYSTEM':state.module.en;
   $('#module-subtitle').textContent=view==='overview'?'六个系统，一套可回放、可比较的机制学习空间。':state.module.subtitle;
   if(view==='history')renderHistory();$('.sidebar').classList.remove('open');requestAnimationFrame(()=>scene?.resize());updatePlay();
