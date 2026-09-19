@@ -23,7 +23,7 @@ let toastTimer,scene,lastFrame=performance.now(),paintTimer=0;
 document.querySelector('#app').innerHTML=`
 <div class="shell">
   <aside class="sidebar" aria-label="系统导航">
-    <div class="brand"><div class="brand-symbol">E</div><div><div class="brand-name">EndoMet</div><small>STUDIO · 内分泌与代谢</small></div></div>
+    <div class="brand"><div class="brand-symbol">E</div><div><div class="brand-name">EndoMet Studio</div><small>内分泌与代谢</small></div></div>
     <button class="side-button" data-view="overview"><span class="side-icon">▦</span>系统总览</button>
     <div class="nav-label">机制实验室 / SYSTEMS</div>
     ${modules.map((m,i)=>`<button class="side-button ${i===0?'active':''}" data-module="${m.id}" style="--color:${m.color}"><span class="side-icon">${m.icon}</span>${m.short}<span class="side-num">${String(i+1).padStart(2,'0')}</span></button>`).join('')}
