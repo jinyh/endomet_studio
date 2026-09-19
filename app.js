@@ -5,11 +5,14 @@ import {validateCommand,parseLocalRequest} from './director.js';
 import {getMechanism,validateMechanism} from './mechanisms.js';
 import {loadSchematicAsset} from './assets.js';
 import {getCourse,createCourseProgress,recordPrediction,completeCourseStep,courseSummary} from './courses.js';
+import {loadAnatomyManifest,relatedAnatomy,validateAnatomyCommand} from './anatomy-catalog.js';
 
 const $=s=>document.querySelector(s);
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const courseProgress=new Map(),quizAnswers=new Map(),sceneAssets=new Map();
 let activeCourseStep=null;
+let anatomyScene=null,anatomyPromise=null;
+const anatomyState={status:'idle',manifest:null,selected:null,moduleId:null,layer:'body',context:true,manual:false};
 const assetModules=['glucose','thyroid'];
 const assetResults=await Promise.allSettled(assetModules.map(id=>loadSchematicAsset(getModule(id))));
 assetResults.forEach((result,i)=>{if(result.status==='fulfilled')sceneAssets.set(assetModules[i],result.value);});
@@ -27,23 +30,29 @@ document.querySelector('#app').innerHTML=`
     <div class="nav-label">学习空间</div>
     <button class="side-button" data-view="course"><span class="side-icon">▤</span>课程任务</button>
     <button class="side-button" data-view="history"><span class="side-icon">◷</span>学习记录</button>
-    <div class="sidebar-bottom"><div class="edition">教学探索版 <span>0.2</span></div><p>用机制连接知识<br>用时间理解变化</p></div>
+    <div class="sidebar-bottom"><div class="edition">教学探索版 <span>0.3</span></div><p>用机制连接知识<br>用时间理解变化</p></div>
   </aside>
   <main class="main">
     <header class="topbar"><div class="topbar-left"><button class="mobile-menu" data-action="menu" aria-label="打开系统导航">☰</button><div class="breadcrumb">学习工作台 <b>/ <span id="breadcrumb-system">糖代谢</span></b></div></div><div class="top-meta"><span>医学数字教学平台</span><div class="avatar" aria-label="本机学习空间">学</div></div></header>
     <div class="content">
       <div class="section-top"><div><div class="eyebrow" id="module-en"></div><h1 id="module-title"></h1><p class="subtitle" id="module-subtitle"></p></div><span class="chip" id="model-chip">机制模型 · 相对基线</span></div>
-      <nav class="tabs" aria-label="学习视图"><button class="tab active" data-view="lab">机制实验</button><button class="tab" data-view="course">课程任务</button><button class="tab" data-view="knowledge">机制与证据</button><button class="tab" data-view="history">学习记录</button></nav>
+      <nav class="tabs" aria-label="学习视图"><button class="tab active" data-view="lab">机制实验</button><button class="tab" data-view="anatomy">解剖定位</button><button class="tab" data-view="course">课程任务</button><button class="tab" data-view="knowledge">机制与证据</button><button class="tab" data-view="history">学习记录</button></nav>
       <section class="page active" id="page-lab" aria-label="机制实验">
         <div class="lab-grid"><div class="stage-column">
           <div class="mission-bar"><span class="mission-number">01</span><div><small>当前探索任务</small><strong id="mission-question"></strong></div><button class="mission-go" data-view="course" aria-label="打开当前课程任务">↗</button></div>
           <div class="course-observation" id="course-observation" hidden></div>
           <div class="scene-wrap"><div class="scene-top"><span class="scene-caption">MECHANISM VIEW</span><button class="scene-mode" data-action="camera-mode">课程镜头</button></div><div class="scene" id="scene"></div><div class="scene-bottom"><div class="legend"><span><i></i>促进</span><span><i class="inhibit"></i>抑制</span></div><span>空间为机制示意</span><button class="icon-btn" data-action="overview-camera">恢复全景</button></div></div>
-          <div class="focus-note"><strong id="focus-title">沿反馈回路观察</strong><p id="focus-copy"></p></div>
+          <div class="focus-note"><strong id="focus-title">沿反馈回路观察</strong><p id="focus-copy"></p><button class="text-btn" data-view="anatomy">查看真实解剖位置 ↗</button></div>
         </div>
         <aside class="observations" aria-label="实时观察与实验设置"><div class="panel-heading"><h2>实时观察</h2><span>基准 = 1.00</span></div><div class="metrics" id="metrics"></div><div class="control-block"><label for="scenario-select">生理与疾病情景</label><select class="select" id="scenario-select"></select><p class="scenario-desc" id="scenario-desc"></p><label class="toggle-row" for="compare-toggle">叠加正常基准<input type="checkbox" id="compare-toggle"></label></div><div class="intervene"><button class="primary-btn wide" data-action="branch">从此刻开展机制实验</button><p id="intervention-note"></p><button class="clear-branch" data-action="undoBranch" hidden>撤销分支，恢复原轨迹</button></div></aside></div>
         <div class="timeline"><div class="timeline-head"><h2 class="timeline-title">机理时间轴<span>MECHANISM TIMELINE</span></h2><div class="time-label"><span id="time-number">60</span><small id="time-unit">分钟</small></div></div><div class="chart" id="chart" aria-label="指标随时间变化的曲线"></div><label class="sr-only" for="timeline-slider">实验时间</label><input class="timeline-range" id="timeline-slider" type="range" min="0" max="240" value="60" step="0.25"><div class="playback"><button class="play" data-action="play-toggle">▶ 播放</button><button class="icon-btn" data-action="restart">↺ 重置</button><label class="sr-only" for="speed-select">播放速度</label><select class="speed" id="speed-select"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select><div id="time-markers" class="playback"></div><span class="timeline-foot" id="chart-caption">实线为当前情景</span></div></div>
         <section class="guide" aria-label="机制助教"><div class="guide-mark">✧</div><div class="guide-body"><div class="guide-title">机制助教<span>本地规则解释 · 未连接大模型</span></div><div class="guide-output" id="guide-output" aria-live="polite"></div><div class="guide-actions"><button data-action="explain">为什么现在变化？</button><button data-action="focus-key">定位关键结构</button><button data-action="compare-guide">与正常情景比较</button></div><form class="guide-form" id="guide-form"><label class="sr-only" for="guide-input">输入实验指令</label><input id="guide-input" maxlength="160" placeholder="试试：跳到 120 分钟 / 定位胰岛 β 细胞"><button type="submit">执行 ↗</button></form></div></section>
+      </section>
+      <section class="page" id="page-anatomy" aria-label="解剖定位">
+        <div class="anatomy-intro"><div><div class="eyebrow">REFERENCE ANATOMY</div><h2>把机制放回人体中</h2><p>观察参考人体中的器官外形、位置与毗邻关系。</p></div><button class="secondary-btn" data-view="lab">返回当前机制实验 ↗</button></div>
+        <div class="anatomy-session" id="anatomy-session"></div>
+        <div class="anatomy-toolbar"><label class="anatomy-picker">定位结构<select class="select" id="anatomy-select" disabled><option>正在准备解剖资源</option></select></label><div class="anatomy-layers" aria-label="解剖观察层级"><button data-anatomy-layer="body" aria-pressed="true" disabled>全身定位</button><button data-anatomy-layer="regional" aria-pressed="false" disabled>局部关系</button><button data-anatomy-layer="organ" aria-pressed="false" disabled>器官特写</button></div><button class="icon-btn" data-action="anatomy-manual" disabled>自由观察</button></div>
+        <div class="anatomy-layout"><div class="anatomy-stage"><div class="anatomy-viewport" id="anatomy-scene" aria-label="真实参考解剖三维视图"></div><div class="anatomy-status" id="anatomy-status" role="status">首次打开时载入真实解剖模型。</div><div class="anatomy-orientation">成人男性参考人体 · 解剖形状保持固定</div></div><aside class="paper-panel anatomy-details"><h2 id="anatomy-selected-name">参考解剖</h2><p id="anatomy-selection-note"></p><label class="toggle-row">显示周围结构<input type="checkbox" id="anatomy-context" checked disabled></label><h3>当前系统的相关结构</h3><div id="anatomy-related"></div><p id="anatomy-coverage" class="anatomy-coverage"></p><button class="text-btn" data-action="anatomy-retry" hidden>重新载入模型 ↗</button><details class="anatomy-credits"><summary>模型来源与使用说明</summary><div id="anatomy-attribution"></div><p>当前使用参考解剖的表面网格。器官到组织、细胞的内部结构需要另行接入，放大表面模型不会生成微观解剖。</p></details></aside></div>
       </section>
       <section class="page" id="page-overview" aria-label="系统总览"></section>
       <section class="page" id="page-course" aria-label="课程任务"></section>
@@ -72,13 +81,85 @@ function selectModule(id){
   $('.clear-branch').hidden=true;$('.scene-mode').textContent='课程镜头';scene?.setManual(false);scene?.setModule(m,sceneAssets.get(m.id));rebuild();renderCourse();renderKnowledge();showView('lab');paint();
 }
 function showView(view){
-  if(!['lab','overview','course','knowledge','history'].includes(view))return;
+  if(!['lab','anatomy','overview','course','knowledge','history'].includes(view))return;
   state.view=view;state.playing=false;document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id===`page-${view}`));document.querySelectorAll('.tab').forEach(el=>{el.classList.toggle('active',el.dataset.view===view);el.setAttribute('aria-current',el.dataset.view===view?'page':'false');});
   document.querySelectorAll('.side-button').forEach(el=>el.classList.toggle('active',view==='overview'?el.dataset.view==='overview':el.dataset.module===state.module.id));
   $('#module-title').textContent=view==='overview'?'内分泌与代谢疾病实验室':state.module.title;
   $('#module-en').textContent=view==='overview'?'EXPLORE THE ENDOCRINE SYSTEM':state.module.en;
   $('#module-subtitle').textContent=view==='overview'?'六个系统，一套可回放、可比较的机制学习空间。':state.module.subtitle;
-  if(view==='history')renderHistory();if(view==='course')renderCourse();$('.sidebar').classList.remove('open');requestAnimationFrame(()=>scene?.resize());updatePlay();
+  if(view==='history')renderHistory();if(view==='course')renderCourse();if(view==='anatomy')ensureAnatomy();anatomyScene?.setActive(view==='anatomy');$('.sidebar').classList.remove('open');requestAnimationFrame(()=>{scene?.resize();anatomyScene?.resize();});updatePlay();
+}
+function renderAnatomyCatalog(){
+  const manifest=anatomyState.manifest;
+  $('#anatomy-select').innerHTML='<option value="">全身概览</option>'+manifest.labels.filter(label=>label.structureId!=='body').map(label=>`<option value="${escape(label.structureId)}">${escape(label.name)}</option>`).join('');
+  const source=manifest.source;
+  $('#anatomy-attribution').innerHTML=`<p>${escape(source.attribution)}</p><p><a href="${escape(source.sourceUrl)}" target="_blank" rel="noopener noreferrer">原始模型来源 ↗</a> · <a href="${escape(source.licenseUrl)}" target="_blank" rel="noopener noreferrer">${escape(source.license)} ↗</a></p><p>已转换为浏览器格式并统一坐标；组织颜色用于区分结构。转换结果尚待医学专家审核。</p>`;
+}
+function selectAnatomyForModule(){
+  if(anatomyState.moduleId===state.module.id)return;
+  anatomyState.moduleId=state.module.id;
+  const preferred={glucose:'pancreas',thyroid:'pituitary',adrenal:'adrenal-left',gonadal:'testis-left',calcium:'kidney-left',energy:'hypothalamus'}[state.module.id];
+  const related=relatedAnatomy(anatomyState.manifest,state.module.id);
+  anatomyState.selected=related.find(label=>label.structureId===preferred)?.structureId??related.find(label=>!label.context)?.structureId??related[0]?.structureId??null;
+  anatomyState.layer='body';anatomyState.manual=false;anatomyState.context=true;
+  anatomyScene.setContextVisible(true);anatomyScene.setManual(false);anatomyScene.setLayer('body');anatomyScene.focus(anatomyState.selected);
+}
+async function ensureAnatomy(){
+  updateAnatomyPanel();
+  if(anatomyState.status==='ready'){selectAnatomyForModule();updateAnatomyPanel();return;}
+  if(anatomyPromise)return anatomyPromise;
+  anatomyState.status='loading';$('#anatomy-status').hidden=false;$('#anatomy-status').textContent='正在载入真实参考解剖…';$('[data-action="anatomy-retry"]').hidden=true;
+  anatomyPromise=(async()=>{
+    try{
+      const [{manifest,url},{AnatomyScene}]=await Promise.all([loadAnatomyManifest(),import('./anatomy.js')]);
+      anatomyState.manifest=manifest;
+      anatomyScene?.destroy();
+      anatomyScene=new AnatomyScene($('#anatomy-scene'),{onSelect:id=>anatomyCommand({type:'focus',structureId:id}),onStatus:status=>{
+        if(status.state==='loading')$('#anatomy-status').textContent='正在载入真实参考解剖…';
+        if(status.state==='error'){
+          anatomyState.status='error';$('#anatomy-status').hidden=false;$('#anatomy-status').textContent=status.message;
+          $('[data-action="anatomy-retry"]').hidden=false;updateAnatomyPanel();
+        }
+      }});
+      if(!await anatomyScene.load(manifest,url))throw new Error('模型加载未完成');
+      anatomyState.status='ready';anatomyState.moduleId=null;renderAnatomyCatalog();selectAnatomyForModule();
+      $('#anatomy-status').hidden=true;anatomyScene.setActive(state.view==='anatomy');updateAnatomyPanel();
+    }catch{
+      anatomyState.status='error';anatomyScene?.destroy();anatomyScene=null;
+      $('#anatomy-status').hidden=false;$('#anatomy-status').textContent='解剖模型暂时无法显示。请重新载入；当前机制实验与时间点已保留。';
+      $('[data-action="anatomy-retry"]').hidden=false;updateAnatomyPanel();
+    }finally{anatomyPromise=null;}
+  })();
+  return anatomyPromise;
+}
+function updateAnatomyPanel(){
+  const ready=anatomyState.status==='ready',m=state.module,scenario=m.scenarios.find(s=>s.id===state.scenario);
+  $('#anatomy-session').textContent=`${m.title} · ${scenario.name} · 实验暂停于 ${formatTime(state.time)} ${m.unit}${state.branchAt===null?'':` · 保留 ${formatTime(state.branchAt)} ${m.unit}的干预分支`}。返回机制实验后可继续。`;
+  $('#anatomy-select').disabled=!ready;$('#anatomy-context').disabled=!ready;$('#anatomy-context').checked=anatomyState.context;
+  $('[data-action="anatomy-manual"]').disabled=!ready;$('[data-action="anatomy-manual"]').textContent=anatomyState.manual?'恢复课程镜头':'自由观察';
+  document.querySelectorAll('[data-anatomy-layer]').forEach(button=>{button.disabled=!ready||(button.dataset.anatomyLayer!=='body'&&!anatomyState.selected);button.setAttribute('aria-pressed',String(button.dataset.anatomyLayer===anatomyState.layer));});
+  if(!ready)return;
+  const selected=anatomyState.manifest.labels.find(label=>label.structureId===anatomyState.selected),related=relatedAnatomy(anatomyState.manifest,m.id);
+  $('#anatomy-select').value=anatomyState.selected??'';
+  $('#anatomy-selected-name').textContent=selected?.name??'全身概览';
+  $('#anatomy-selection-note').textContent=selected?'用全身定位查看位置，用局部关系观察邻近结构，用器官特写检查外形。':'选择一个结构，沿着人体定位进入器官观察。';
+  $('#anatomy-related').innerHTML=related.map(label=>`<button class="anatomy-structure ${label.structureId===anatomyState.selected?'selected':''}" data-anatomy-structure="${escape(label.structureId)}" aria-pressed="${label.structureId===anatomyState.selected}"><i style="background:${label.color}"></i>${escape(label.name)}${label.context?'<small>参照</small>':''}</button>`).join('')||'<p>本系统的专属器官网格尚未接入，可先查看全身位置参照。</p>';
+  const ids=new Set(anatomyState.manifest.labels.map(label=>label.structureId));
+  const notes={thyroid:!ids.has('thyroid')?'本版已接入上游下丘脑与垂体；甲状腺和甲状旁腺本体尚未接入。':'',calcium:!ids.has('parathyroid')?'当前提供肾脏位置参照；甲状旁腺及骨组织网格尚未接入。':'',gonadal:!ids.has('testis-left')?'当前提供上游调节结构；性腺本体尚未接入。':'本版为男性参考解剖；卵巢及女性生殖系统待独立接入。',energy:'当前可查看下丘脑及已接入的相关器官；脂肪组织分布尚未建模。',glucose:'当前胰腺显示为实质表面；胰岛、细胞和分泌颗粒需要独立的微观模型。'};
+  $('#anatomy-coverage').textContent=notes[m.id]??'参考图谱用于空间定位，当前生理情景不会改变器官网格。';
+}
+function anatomyCommand(raw){
+  if(anatomyState.status!=='ready')throw new Error('请等待解剖模型加载完成');
+  const cmd=validateAnatomyCommand(raw,anatomyState.manifest);
+  if(cmd.type==='focus'){
+    anatomyState.selected=cmd.structureId;anatomyState.manual=false;anatomyScene.setManual(false);
+    if(cmd.structureId===null){anatomyState.layer='body';anatomyScene.setLayer('body');}
+    anatomyScene.focus(cmd.structureId);
+  }
+  if(cmd.type==='layer'){anatomyState.layer=anatomyState.selected===null?'body':cmd.layer;anatomyState.manual=false;anatomyScene.setManual(false);anatomyScene.setLayer(anatomyState.layer);}
+  if(cmd.type==='context'){anatomyState.context=cmd.enabled;anatomyScene.setContextVisible(cmd.enabled);}
+  if(cmd.type==='manual'){anatomyState.manual=cmd.enabled;anatomyScene.setManual(cmd.enabled);}
+  updateAnatomyPanel();return snapshot();
 }
 function renderOverview(){
   $('#page-overview').innerHTML=`<p class="overview-intro">从一个问题进入实验：观察激素与代谢的动态变化，定位反馈环节，改变一个条件，再用曲线检验你的解释。</p><div class="catalog">${modules.map((m,i)=>`<button class="catalog-card" data-module="${m.id}" style="--color:${m.color}"><span class="card-icon">${m.icon}</span><h2>${m.title}</h2><p>${m.question}</p><span class="card-footer">${m.scenarios.length} 个情景 · ${m.duration} ${m.unit}时间轴 ↗</span></button>`).join('')}</div>`;
@@ -175,16 +256,20 @@ function command(raw){
   }
   paint();return snapshot();
 }
-function snapshot(){const values=sample(state.trajectories.current,state.time);return {module:state.module.id,scenario:state.scenario,time:state.time,unit:state.module.unit,playing:state.playing,branchAt:state.branchAt,focus:state.focus,modelVersion:MODEL_VERSION,values:Object.fromEntries(state.module.metrics.map(([key])=>[key,values[key]]))};}
+function snapshot(){const values=sample(state.trajectories.current,state.time);return {view:state.view,anatomy:{status:anatomyState.status,structureId:anatomyState.selected,layer:anatomyState.layer},module:state.module.id,scenario:state.scenario,time:state.time,unit:state.module.unit,playing:state.playing,branchAt:state.branchAt,focus:state.focus,modelVersion:MODEL_VERSION,values:Object.fromEntries(state.module.metrics.map(([key])=>[key,values[key]]))};}
 $('#scenario-select').addEventListener('change',e=>command({type:'scenario',scenarioId:e.target.value}));
 $('#timeline-slider').addEventListener('input',e=>command({type:'seek',time:Number(e.target.value)}));
 $('#compare-toggle').addEventListener('change',e=>{state.compare=e.target.checked;paint();});
 $('#speed-select').addEventListener('change',e=>state.speed=Number(e.target.value));
+$('#anatomy-select').addEventListener('change',e=>anatomyCommand({type:'focus',structureId:e.target.value||null}));
+$('#anatomy-context').addEventListener('change',e=>anatomyCommand({type:'context',enabled:e.target.checked}));
 $('#guide-form').addEventListener('submit',e=>{e.preventDefault();const text=$('#guide-input').value;try{const cmd=parseLocalRequest(text,state.module);if(cmd){command(cmd);if(cmd.type!=='explain')$('#guide-output').textContent=`已执行${{seek:'时间定位',focus:'结构定位',play:'播放',pause:'暂停',branch:'机制实验',undoBranch:'撤销分支'}[cmd.type]}。${cmd.type==='focus'?state.module.explain:''}`;}else $('#guide-output').textContent='当前助教支持本地实验指令与机制解释。可以输入“为什么变化”“定位结构名称”“跳到时间”“暂停”。开放式医学问答需要后续接入经过审核的知识库与模型。';}catch(err){$('#guide-output').textContent=err.message;}$('#guide-input').value='';});
 document.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   if(b.dataset.module){selectModule(b.dataset.module);return;}
   if(b.dataset.view){showView(b.dataset.view);return;}
+  if(b.dataset.anatomyStructure){anatomyCommand({type:'focus',structureId:b.dataset.anatomyStructure});return;}
+  if(b.dataset.anatomyLayer){anatomyCommand({type:'layer',layer:b.dataset.anatomyLayer});return;}
   if(b.dataset.time!==undefined){command({type:'seek',time:Number(b.dataset.time)});return;}
   if(b.dataset.answer!==undefined){const course=getCourse(state.module.id);if(!courseSummary(currentCourseProgress(course),course).finished)return;const answer=Number(b.dataset.answer),correct=answer===state.module.quiz.correct;quizAnswers.set(state.module.id,answer);log(`机制题：${correct?'正确':'需复习'}`);renderCourse();return;}
   if(b.dataset.predictionStep){
@@ -196,6 +281,8 @@ document.addEventListener('click',e=>{
   if(b.dataset.restore!==undefined){const r=records[Number(b.dataset.restore)];if(r){selectModule(r.module);command({type:'scenario',scenarioId:r.scenario});command({type:'seek',time:r.time});toast('已重访该情景与时间点；历史干预不自动重建。');}return;}
   const action=b.dataset.action;
   if(action==='menu')$('.sidebar').classList.toggle('open');
+  else if(action==='anatomy-retry')ensureAnatomy();
+  else if(action==='anatomy-manual')anatomyCommand({type:'manual',enabled:!anatomyState.manual});
   else if(action==='play-toggle')command({type:state.playing?'pause':'play'});
   else if(action==='restart')command({type:'seek',time:0});
   else if(action==='overview-camera')command({type:'focus',nodeId:null});
@@ -222,6 +309,14 @@ if(modelContext?.registerTool){
   const register=tool=>{try{Promise.resolve(modelContext.registerTool(tool,{signal:lifecycle.signal})).catch(()=>{});}catch{}};
   register({name:'read_endocrine_experiment',description:'读取当前内分泌教学实验的情景、时间与相对指标。',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true},execute:()=>snapshot()});
   register({name:'navigate_endocrine_system',description:'切换到一个内分泌系统，重置当前未保存实验。',inputSchema:{type:'object',properties:{moduleId:{type:'string',enum:modules.map(m=>m.id)}},required:['moduleId'],additionalProperties:false},annotations:{readOnlyHint:false},execute:input=>{if(!input||!modules.some(m=>m.id===input.moduleId))throw new Error('Unknown module');selectModule(input.moduleId);return snapshot();}});
+  register({name:'view_endocrine_anatomy',description:'打开真实参考解剖，保留当前实验时间和干预分支；可定位已接入的器官并选择全身、局部或特写镜头。',inputSchema:{type:'object',properties:{structureId:{type:['string','null']},layer:{type:'string',enum:['body','regional','organ']}},additionalProperties:false},annotations:{readOnlyHint:false},execute:async input=>{
+    if(!input||typeof input!=='object'||Array.isArray(input)||Object.keys(input).some(key=>!['structureId','layer'].includes(key)))throw new Error('无效的解剖指令');
+    await ensureAnatomy();if(anatomyState.status!=='ready')throw new Error('解剖模型加载失败，可在解剖定位视图重试');
+    const commands=[];
+    if(Object.hasOwn(input,'structureId'))commands.push(validateAnatomyCommand({type:'focus',structureId:input.structureId},anatomyState.manifest));
+    if(Object.hasOwn(input,'layer'))commands.push(validateAnatomyCommand({type:'layer',layer:input.layer},anatomyState.manifest));
+    showView('anatomy');commands.forEach(anatomyCommand);return snapshot();
+  }});
   register({name:'control_endocrine_experiment',description:'控制当前教学实验；支持定位时间、结构、播放、暂停、情景选择与建立或撤销机制分支。',inputSchema:{type:'object',properties:{type:{type:'string',enum:['seek','focus','scenario','play','pause','branch','undoBranch','explain']},time:{type:'number'},nodeId:{type:['string','null']},scenarioId:{type:'string'}},required:['type'],additionalProperties:false},annotations:{readOnlyHint:false},execute:input=>{validateCommand(input,state.module);showView('lab');return command(input);}});
   window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
 }

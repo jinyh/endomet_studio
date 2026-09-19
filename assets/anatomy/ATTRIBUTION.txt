@@ -1,0 +1,12 @@
+BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International
+
+License: Creative Commons Attribution 4.0 International
+https://creativecommons.org/licenses/by/4.0/
+Official license: https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html
+
+Changes: Selected official ELEMENT meshes, merged each concept into one independently named mesh without duplicate elements, rotated all coordinates identically and converted mm to m, computed vertex normals, assigned teaching colors, converted OBJ to indexed GLB. Original 99% mesh reduction retained.
+
+Review status: draft, anatomy scope; no medical review claimed.
+Source and individual OBJ checksums: source-lock.json and source-mapping.json.
+Coordinate evidence: coordinate_system.png.
+Reproduce: python3 scripts/prepare_anatomy.py --cache /private/tmp/endomet-anatomy --download

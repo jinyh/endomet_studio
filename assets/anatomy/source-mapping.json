@@ -1,0 +1,630 @@
+[
+  {
+    "structureId": "body",
+    "conceptId": "FMA7163",
+    "representationId": "BP9115",
+    "sourceName": "skin",
+    "tree": "isa",
+    "files": [
+      {
+        "elementId": "FJ2810",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2810.obj",
+        "sha256": "682f402206f15592acdeaae8ffb6b34c3e5c3267fa4685e63d2e4920ef2a80e0",
+        "vertices": 102467,
+        "triangles": 203382
+      }
+    ]
+  },
+  {
+    "structureId": "pancreas",
+    "conceptId": "FMA63120",
+    "representationId": "BP9199",
+    "sourceName": "parenchyma of pancreas",
+    "tree": "isa",
+    "files": [
+      {
+        "elementId": "FJ2629",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2629.obj",
+        "sha256": "bd34649f3c15c34fe2fe845a6c6e926de2c014557360df48922f7266dba113e6",
+        "vertices": 2153,
+        "triangles": 4272
+      }
+    ]
+  },
+  {
+    "structureId": "hypothalamus",
+    "conceptId": "FMA62008",
+    "representationId": "BP6496",
+    "sourceName": "hypothalamus",
+    "tree": "isa",
+    "files": [
+      {
+        "elementId": "FJ1760",
+        "entry": "isa_BP3D_4.0_obj_99/FJ1760.obj",
+        "sha256": "aec134edcffcaea082eaebc3a01fe84700893fcc8cba5868b1ade6a721f530bf",
+        "vertices": 1183,
+        "triangles": 2050
+      },
+      {
+        "elementId": "FJ1808",
+        "entry": "isa_BP3D_4.0_obj_99/FJ1808.obj",
+        "sha256": "122de5cfac67f779f911876ea1faca1fb9546327b1a1654d395f571f711772f7",
+        "vertices": 1191,
+        "triangles": 2028
+      }
+    ]
+  },
+  {
+    "structureId": "pituitary",
+    "conceptId": "FMA13889",
+    "representationId": "BP4630",
+    "sourceName": "pituitary gland",
+    "tree": "isa",
+    "files": [
+      {
+        "elementId": "FJ1796",
+        "entry": "isa_BP3D_4.0_obj_99/FJ1796.obj",
+        "sha256": "e79b1a41d81d066e798dcda7f73f7ffd58741adfbd709d47baacccb2fabfcce0",
+        "vertices": 609,
+        "triangles": 1164
+      }
+    ]
+  },
+  {
+    "structureId": "adrenal-right",
+    "conceptId": "FMA15629",
+    "representationId": "BP9132",
+    "sourceName": "right adrenal gland",
+    "tree": "isa",
+    "files": [
+      {
+        "elementId": "FJ3130",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3130.obj",
+        "sha256": "c4d17a1accdd2e684d919582c36c1d51c7b6d382e221525c87e04c2575ccc3c6",
+        "vertices": 1149,
+        "triangles": 2294
+      }
+    ]
+  },
+  {
+    "structureId": "adrenal-left",
+    "conceptId": "FMA15630",
+    "representationId": "BP9014",
+    "sourceName": "left adrenal gland",
+    "tree": "isa",
+    "files": [
+      {
+        "elementId": "FJ3129",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3129.obj",
+        "sha256": "bff9553c5d66c854bb54577136eb734dfd004075323013456f1e995ac8f8e545",
+        "vertices": 2000,
+        "triangles": 3996
+      }
+    ]
+  },
+  {
+    "structureId": "kidney-right",
+    "conceptId": "FMA7204",
+    "representationId": "BP8907",
+    "sourceName": "right kidney",
+    "tree": "isa",
+    "files": [
+      {
+        "elementId": "FJ3147",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3147.obj",
+        "sha256": "0b75658b1af56974cc70f7f805784b40630debdfa76e196c51ee91422af99e8f",
+        "vertices": 1163,
+        "triangles": 2310
+      }
+    ]
+  },
+  {
+    "structureId": "kidney-left",
+    "conceptId": "FMA7205",
+    "representationId": "BP9289",
+    "sourceName": "left kidney",
+    "tree": "isa",
+    "files": [
+      {
+        "elementId": "FJ3145",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3145.obj",
+        "sha256": "7d60d27da6d4d5d3e9fd78dde04a8401cb55d998a31f05cc9c8968955d83add9",
+        "vertices": 1497,
+        "triangles": 2982
+      }
+    ]
+  },
+  {
+    "structureId": "stomach",
+    "conceptId": "FMA7148",
+    "representationId": "BP7926",
+    "sourceName": "stomach",
+    "tree": "isa",
+    "files": [
+      {
+        "elementId": "FJ2564",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2564.obj",
+        "sha256": "b11689fa42e28706ddeecb6ccbf1e70769d8b91ad4158e51d77613870c049f6d",
+        "vertices": 914,
+        "triangles": 1810
+      }
+    ]
+  },
+  {
+    "structureId": "duodenum",
+    "conceptId": "FMA7206",
+    "representationId": "BP8646",
+    "sourceName": "duodenum",
+    "tree": "isa",
+    "files": [
+      {
+        "elementId": "FJ2573",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2573.obj",
+        "sha256": "7b076d8f2367cf837121ebaf340f38bed6d8683bfafc0fb809b5f597204ce706",
+        "vertices": 977,
+        "triangles": 1860
+      }
+    ]
+  },
+  {
+    "structureId": "liver",
+    "conceptId": "FMA7197",
+    "representationId": "BP9334",
+    "sourceName": "liver",
+    "tree": "partof",
+    "files": [
+      {
+        "elementId": "FJ1883",
+        "entry": "isa_BP3D_4.0_obj_99/FJ1883.obj",
+        "sha256": "3f2550995fc2df1d1cd49e4a421d50f66b88dca0dbbdb7938174d4625bd95c7e",
+        "vertices": 283,
+        "triangles": 428
+      },
+      {
+        "elementId": "FJ1893",
+        "entry": "isa_BP3D_4.0_obj_99/FJ1893.obj",
+        "sha256": "6feb8f567af7332f25a489990a4ae24ad92fc740d0d78a110b52954149a6d2fc",
+        "vertices": 786,
+        "triangles": 1354
+      },
+      {
+        "elementId": "FJ1913",
+        "entry": "isa_BP3D_4.0_obj_99/FJ1913.obj",
+        "sha256": "64e5a9bab9d7d720f64740afe2af45ddef2d6d4fd30bb588125bf65d00e5cd89",
+        "vertices": 1910,
+        "triangles": 3286
+      },
+      {
+        "elementId": "FJ1914",
+        "entry": "isa_BP3D_4.0_obj_99/FJ1914.obj",
+        "sha256": "07b9c81f6ae022508c9eb109714eb9eb2cb319bb388e7320a93e4bf9c43568ef",
+        "vertices": 180,
+        "triangles": 316
+      },
+      {
+        "elementId": "FJ1916",
+        "entry": "isa_BP3D_4.0_obj_99/FJ1916.obj",
+        "sha256": "bddea5b341bc0e4264040c98ea96b65e0971535f3031311e201ea4282b835c8b",
+        "vertices": 214,
+        "triangles": 362
+      },
+      {
+        "elementId": "FJ2386",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2386.obj",
+        "sha256": "6001dc21e4c922894507a1f4db097a00610b848778c8ad27de3f006f7ee19a9a",
+        "vertices": 214,
+        "triangles": 362
+      },
+      {
+        "elementId": "FJ2404",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2404.obj",
+        "sha256": "907b048e5f08e8f546427173996d76d7844d7b57fe3576d9ade854d8e5875534",
+        "vertices": 4965,
+        "triangles": 6706
+      },
+      {
+        "elementId": "FJ2405",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2405.obj",
+        "sha256": "b3e72f06d867b67fe7a4e1322293758709c00aa07e0a087b80ec273af6d8a128",
+        "vertices": 2605,
+        "triangles": 3230
+      },
+      {
+        "elementId": "FJ2409",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2409.obj",
+        "sha256": "6d7b0d3d2fc1f1e4255f8b665a61bbbf3ea6712cea85a95246851acbfda0c98f",
+        "vertices": 5091,
+        "triangles": 8534
+      },
+      {
+        "elementId": "FJ2415",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2415.obj",
+        "sha256": "dced2210d0b4b725e40c2e63791023fdcf7ee8aadd2f6718fd442c0e7654107f",
+        "vertices": 803,
+        "triangles": 1386
+      },
+      {
+        "elementId": "FJ2416",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2416.obj",
+        "sha256": "2d3c37d1811a909e5cfd016f9d5c700b433d5f55e4bcb5fb64494dbfcb839181",
+        "vertices": 2510,
+        "triangles": 3538
+      },
+      {
+        "elementId": "FJ2816",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2816.obj",
+        "sha256": "384a517622b5ae1106a811ee557deb1a1349d5cc94c230c283a1bab9d34f0a79",
+        "vertices": 2526,
+        "triangles": 5020
+      },
+      {
+        "elementId": "FJ2818",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2818.obj",
+        "sha256": "c1523e137e1466a66e9263161f6155e1bbcf263f74c4cafebec1a5993fd8fde0",
+        "vertices": 7482,
+        "triangles": 14326
+      },
+      {
+        "elementId": "FJ2819",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2819.obj",
+        "sha256": "d14abcca7dbd82529eedd830d9ed9c80edd4261b22c32d681b9cb14feffdfa46",
+        "vertices": 5487,
+        "triangles": 10326
+      },
+      {
+        "elementId": "FJ2820",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2820.obj",
+        "sha256": "bac2d30a479b0a7765f4a7fe4e25bd44fa7c01cd6a0b24bf4323d270bad75b35",
+        "vertices": 11418,
+        "triangles": 17942
+      },
+      {
+        "elementId": "FJ2821",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2821.obj",
+        "sha256": "dcd7f4d1a09b3034cfe4b51a2efe766201ff09bcea53d8c2315219034b0aa3de",
+        "vertices": 6605,
+        "triangles": 11442
+      },
+      {
+        "elementId": "FJ2822",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2822.obj",
+        "sha256": "14b4e694857cea1de3897262a83d9aab0a8a05c39eef12e775a2adc58def97a8",
+        "vertices": 9988,
+        "triangles": 19450
+      },
+      {
+        "elementId": "FJ2823",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2823.obj",
+        "sha256": "9c8659ff030e9e48504c0faccad1af0f45b865220e013fdaafb1ccd2c7168e79",
+        "vertices": 10230,
+        "triangles": 19156
+      },
+      {
+        "elementId": "FJ2824",
+        "entry": "isa_BP3D_4.0_obj_99/FJ2824.obj",
+        "sha256": "f91e3c89b4db356fa5e8b03dbbb38b2dbebe358788ba1eb01d2c6ecc2ac94c2d",
+        "vertices": 11459,
+        "triangles": 21592
+      },
+      {
+        "elementId": "FJ3071",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3071.obj",
+        "sha256": "c2c9e8156274a487a51c0613a2e91dcffe764e1b673a62d7a56266811ccc6321",
+        "vertices": 395,
+        "triangles": 686
+      },
+      {
+        "elementId": "FJ3072",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3072.obj",
+        "sha256": "f9a417445e9a3cea161f7952f8dcfea4e2cfca24f397a0a35696087a20d079b4",
+        "vertices": 1265,
+        "triangles": 1708
+      },
+      {
+        "elementId": "FJ3073",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3073.obj",
+        "sha256": "37c7a8d6706d168cbb856da3cbf23370e5b5a2e291869cb16510e18d77f8e29b",
+        "vertices": 404,
+        "triangles": 770
+      },
+      {
+        "elementId": "FJ3074",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3074.obj",
+        "sha256": "0ba9fba44b08ccd8046a52dc358ff7cd81e0401a530de0d27fedd468febdd423",
+        "vertices": 1582,
+        "triangles": 2832
+      },
+      {
+        "elementId": "FJ3075",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3075.obj",
+        "sha256": "796d8ed0c0958a34b6eecd55ce698604caacbf39839e6e83a421407d72c7d6cc",
+        "vertices": 1244,
+        "triangles": 1666
+      },
+      {
+        "elementId": "FJ3076",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3076.obj",
+        "sha256": "4748142fb6d678b785e582321ee628fc204b43123ded97a1f7af56a364cbabcd",
+        "vertices": 459,
+        "triangles": 892
+      },
+      {
+        "elementId": "FJ3077",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3077.obj",
+        "sha256": "fd4de5d5d5799a9ad0a4a4caad0e2a49eb5926706c0c8eefe2cd174d60863f51",
+        "vertices": 250,
+        "triangles": 430
+      },
+      {
+        "elementId": "FJ3081",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3081.obj",
+        "sha256": "bd4cff9e5fc6feb0d0f742a91d8a67e1fa4cda96e455e5a21a638b064d195da6",
+        "vertices": 181,
+        "triangles": 358
+      },
+      {
+        "elementId": "FJ3083",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3083.obj",
+        "sha256": "81429abe63ecf1557b9ab5187782e6a78ddca971583dad7f46e38f57ddc54e23",
+        "vertices": 1409,
+        "triangles": 2806
+      },
+      {
+        "elementId": "FJ3086",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3086.obj",
+        "sha256": "bd8d6f683c6e501e62e895d98859e6b7591df32f5fbcde80c6de87ba46239647",
+        "vertices": 502,
+        "triangles": 990
+      },
+      {
+        "elementId": "FJ3088",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3088.obj",
+        "sha256": "efd9fc5309a68bd0b8b7c7fd016e2b871adcfe8d7df8d1a1b127017b700a3b50",
+        "vertices": 368,
+        "triangles": 608
+      },
+      {
+        "elementId": "FJ3089",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3089.obj",
+        "sha256": "7f78fc38fd1aab29e44c3287ae58c7636a9c2c50aae69e32ca1098e0befa2b91",
+        "vertices": 443,
+        "triangles": 664
+      },
+      {
+        "elementId": "FJ3090",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3090.obj",
+        "sha256": "664f4c51268e477bda417b4cb35adf48a716973399005d574692ad79ec9c1ef1",
+        "vertices": 503,
+        "triangles": 808
+      },
+      {
+        "elementId": "FJ3091",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3091.obj",
+        "sha256": "9e741671cffe043f2c51a4474bc672d9053bce70a01a1e9d81238e35b226860a",
+        "vertices": 341,
+        "triangles": 598
+      },
+      {
+        "elementId": "FJ3092",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3092.obj",
+        "sha256": "2e10af454a1ec0dbb14218951d287d5408aa29a4f4db9169b5888756482d1b8d",
+        "vertices": 364,
+        "triangles": 618
+      },
+      {
+        "elementId": "FJ3093",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3093.obj",
+        "sha256": "2d863da0b8be2e5d6e6023110cdba26acb9778422429c87bef1a6f425ede58aa",
+        "vertices": 460,
+        "triangles": 658
+      },
+      {
+        "elementId": "FJ3095",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3095.obj",
+        "sha256": "373d94e12329224b9707b3ccb357994169a49405f68b257e0e278669c6fa1c9d",
+        "vertices": 666,
+        "triangles": 1328
+      },
+      {
+        "elementId": "FJ3096",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3096.obj",
+        "sha256": "11a5891a14162d16c8f919d5a8da6d1e7ca243f7c0d8697f6f10aceed587e97a",
+        "vertices": 428,
+        "triangles": 848
+      },
+      {
+        "elementId": "FJ3102",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3102.obj",
+        "sha256": "10a59163098dd1896bd60a0893e4084f4b37660b9443bad284489999b3763749",
+        "vertices": 367,
+        "triangles": 730
+      },
+      {
+        "elementId": "FJ3103",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3103.obj",
+        "sha256": "61bd543e1626e4856094b4aec94af8457094a2b9bf20186fd96bd88bce05001a",
+        "vertices": 432,
+        "triangles": 698
+      },
+      {
+        "elementId": "FJ3104",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3104.obj",
+        "sha256": "7da92c0c19f9e66a23155524581cc26b280e0c9f78cb0b7e8cfe1b41b2848e30",
+        "vertices": 344,
+        "triangles": 570
+      },
+      {
+        "elementId": "FJ3105",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3105.obj",
+        "sha256": "3580eed66acd48da39fc321d2fe491daed3edc6be6bfb6da8338de234d27eb26",
+        "vertices": 371,
+        "triangles": 494
+      },
+      {
+        "elementId": "FJ3106",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3106.obj",
+        "sha256": "f17498768ea407af624833b72f31cdbfa5cfe6c5649bd2f4fe511a78e1155855",
+        "vertices": 425,
+        "triangles": 754
+      },
+      {
+        "elementId": "FJ3107",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3107.obj",
+        "sha256": "42235fa9aaac3881dc36fbb138ff308b57d5da006d2cdf8f1b5ba8b1c6c3a106",
+        "vertices": 496,
+        "triangles": 612
+      },
+      {
+        "elementId": "FJ3108",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3108.obj",
+        "sha256": "cd9efbda9ba24249ad662d6f6c48e5d6bd0ae8121076d49648ed368d437544cb",
+        "vertices": 503,
+        "triangles": 870
+      },
+      {
+        "elementId": "FJ3109",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3109.obj",
+        "sha256": "57e08b2162780c4cdc25221810eb0abfe5f2971d891d25768823673e53aaff14",
+        "vertices": 404,
+        "triangles": 628
+      },
+      {
+        "elementId": "FJ3110",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3110.obj",
+        "sha256": "0cacd86a71659ba81507207d5dbc17d34b38678c3feede81eeef1284827dca06",
+        "vertices": 896,
+        "triangles": 1196
+      },
+      {
+        "elementId": "FJ3111",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3111.obj",
+        "sha256": "d316e56f40acbffaf8aa0b81a7617838cf8f507ffe9123e61bdbabbe2e283a2d",
+        "vertices": 1100,
+        "triangles": 2194
+      },
+      {
+        "elementId": "FJ3112",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3112.obj",
+        "sha256": "0bda131695894a61a7f7c68b217204673667c5560db9b12010fa3f110c571979",
+        "vertices": 554,
+        "triangles": 1100
+      },
+      {
+        "elementId": "FJ3113",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3113.obj",
+        "sha256": "3f81cbcaa89e260367f026d8e0fc387b6760ef34e6a46f8d80bac1622b4100a5",
+        "vertices": 1031,
+        "triangles": 1712
+      },
+      {
+        "elementId": "FJ3114",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3114.obj",
+        "sha256": "d6fbd37db3996fbe87ebf8471e6fc53e30563bb9e0db5da3570e340607a97f1b",
+        "vertices": 479,
+        "triangles": 772
+      },
+      {
+        "elementId": "FJ3115",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3115.obj",
+        "sha256": "83e41f08d853a73d831209f67db2484b5b479e59622f8498a9e79479b8ef411d",
+        "vertices": 1037,
+        "triangles": 1616
+      },
+      {
+        "elementId": "FJ3116",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3116.obj",
+        "sha256": "6a1eb63f8c4faa5f696eaf5ac59315e754c8fefe97063d3a189dc2737e520b94",
+        "vertices": 631,
+        "triangles": 814
+      },
+      {
+        "elementId": "FJ3117",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3117.obj",
+        "sha256": "e7858acd2c635e83f72ebe948b482bf3a8b51c50791457f9c4190273b76d492c",
+        "vertices": 223,
+        "triangles": 442
+      },
+      {
+        "elementId": "FJ3122",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3122.obj",
+        "sha256": "0396415a16fc85e933ca43ca30fd55289cbb7fd412f1a33a004dc5b2f485acd3",
+        "vertices": 105,
+        "triangles": 206
+      },
+      {
+        "elementId": "FJ3123",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3123.obj",
+        "sha256": "5a14237d388e8c716a56c54e51dcccc3f89d187f1cf0d4eb4e0e04c1a7aac405",
+        "vertices": 115,
+        "triangles": 226
+      },
+      {
+        "elementId": "FJ3124",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3124.obj",
+        "sha256": "b7a1c20e756b9c247542a68e6a281de1df72dae2143a8daf635efe32cbc3ff4c",
+        "vertices": 319,
+        "triangles": 494
+      },
+      {
+        "elementId": "FJ3125",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3125.obj",
+        "sha256": "10b5e566e4d431fbd5c6d2f66a5633fb399a550f3c69c41a2be9dd95de4910db",
+        "vertices": 1161,
+        "triangles": 2284
+      },
+      {
+        "elementId": "FJ3126",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3126.obj",
+        "sha256": "9f0e54615639750955d2c6278dc73c1d18c6723ddb5c709dc8b4f313a7a74270",
+        "vertices": 1217,
+        "triangles": 2364
+      },
+      {
+        "elementId": "FJ3127",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3127.obj",
+        "sha256": "b723ba5592823c4608ccef1ab0cd82ce03254af789166b1c5fc0ca5a66aab790",
+        "vertices": 662,
+        "triangles": 1162
+      },
+      {
+        "elementId": "FJ3128",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3128.obj",
+        "sha256": "5ce863ef62729e554edc8e68c036cd5c6f526c18e403a1864c3f772452be49da",
+        "vertices": 838,
+        "triangles": 1660
+      }
+    ]
+  },
+  {
+    "structureId": "testis-right",
+    "conceptId": "FMA7211",
+    "representationId": "BP9204",
+    "sourceName": "right testis",
+    "tree": "isa",
+    "files": [
+      {
+        "elementId": "FJ3142",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3142.obj",
+        "sha256": "1dc84c4d16139902662f08c97bc2581cb698cf8411855bcca5474e154f4ad86e",
+        "vertices": 108,
+        "triangles": 212
+      }
+    ]
+  },
+  {
+    "structureId": "testis-left",
+    "conceptId": "FMA7212",
+    "representationId": "BP8578",
+    "sourceName": "left testis",
+    "tree": "isa",
+    "files": [
+      {
+        "elementId": "FJ3138",
+        "entry": "isa_BP3D_4.0_obj_99/FJ3138.obj",
+        "sha256": "bb9e548f7059fb21370b8c9612ce10fe70aa9b96945c1faea33d7cc9ed113639",
+        "vertices": 107,
+        "triangles": 210
+      }
+    ]
+  }
+]

@@ -1,0 +1,954 @@
+{
+  "assetId": "bodyparts3d-endocrine",
+  "version": "0.3.0",
+  "system": "endocrine",
+  "representation": "anatomical",
+  "source": {
+    "origin": "BodyParts3D 4.0 — adult male whole-body reference; official 99% reduction OBJ archive",
+    "license": "CC-BY-4.0",
+    "attribution": "BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International",
+    "creationMethod": "model-file",
+    "sourceUrl": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/isa_BP3D_4.0_obj_99.zip",
+    "licenseUrl": "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html",
+    "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+    "sourceFiles": [
+      {
+        "name": "isa_BP3D_4.0_obj_99.zip",
+        "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/isa_BP3D_4.0_obj_99.zip",
+        "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "byteLength": 142903898
+      },
+      {
+        "name": "isa_parts_list_e.txt",
+        "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/isa_parts_list_e.txt",
+        "sha256": "ab7796deedd49205e77f3609a1cb8c53e2bbee14ecb5c9a6ca05227469780513",
+        "byteLength": 128086
+      },
+      {
+        "name": "isa_element_parts.txt",
+        "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/isa_element_parts.txt",
+        "sha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf",
+        "byteLength": 1142159
+      },
+      {
+        "name": "partof_parts_list_e.txt",
+        "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/partof_parts_list_e.txt",
+        "sha256": "9224080557053e6f1322f1e13ab27f0ecde0db19bb3b505f0631afad230eeebd",
+        "byteLength": 59351
+      },
+      {
+        "name": "partof_element_parts.txt",
+        "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/partof_element_parts.txt",
+        "sha256": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea",
+        "byteLength": 651179
+      },
+      {
+        "name": "README_e.html",
+        "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/README_e.html",
+        "sha256": "f9a90b4d945ad0fe50db45c712e931aa54e52667187b30d7085b6cc394f40107",
+        "byteLength": 19263
+      },
+      {
+        "name": "license.html",
+        "url": "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html",
+        "sha256": "d551db2577e409cecee586d0f5f5bd857d96c16b61b48e7d4817edfa27fc9030",
+        "byteLength": 14694
+      },
+      {
+        "name": "coordinate_system.png",
+        "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20130619/coordinate_system.png",
+        "sha256": "338736275c11eac8c89531fdc14193c9a8adf5baab674033d9d89259f152a5f6",
+        "byteLength": 28425
+      }
+    ],
+    "mappingUri": "./source-mapping.json",
+    "licenseUri": "./license.html",
+    "transform": {
+      "formula": "[X,Y,Z] = [x,z,-y] * 0.001",
+      "matrixOrder": "row-major",
+      "matrix": [
+        [
+          0.001,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0.001,
+          0
+        ],
+        [
+          0,
+          -0.001,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "sourceUnit": "mm",
+      "description": "One identical right-handed rigid rotation and mm-to-m scale for every source vertex; no translation, independent recentering, shape replacement, or additional simplification. Source x points to subject left, y posterior, z superior; output +Z anterior.",
+      "coordinateReferenceUrl": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20130619/coordinate_system.png"
+    },
+    "modifications": "Selected official ELEMENT meshes, merged each concept into one independently named mesh without duplicate elements, rotated all coordinates identically and converted mm to m, computed vertex normals, assigned teaching colors, converted OBJ to indexed GLB. Original 99% mesh reduction retained.",
+    "coverageNotes": [
+      "Adult male reference model; not a patient-specific scan or a medically reviewed teaching atlas.",
+      "Pancreas mesh is pancreatic parenchyma FMA63120, not pancreatic ducts or resolved islets.",
+      "Whole liver uses the 60 ELEMENTs in the official PART-OF FMA7197 definition.",
+      "Thyroid and parathyroid glands are absent from the downloaded IS-A/PART-OF concept lists; no substitute shapes are supplied.",
+      "Testes represent the male reference only; female gonadal anatomy, islet microstructure and hormone flow are not supplied."
+    ]
+  },
+  "review": {
+    "status": "draft",
+    "scope": "anatomy"
+  },
+  "coordinates": {
+    "unit": "m",
+    "upAxis": "Y",
+    "handedness": "right"
+  },
+  "lods": [
+    {
+      "level": 0,
+      "uri": "./bodyparts3d-endocrine.glb",
+      "triangleCount": 420192,
+      "sha256": "015626344976037ece294da9a81f46ce34737e469d2d0755b219f5d787378a24",
+      "byteLength": 10461228
+    }
+  ],
+  "labels": [
+    {
+      "structureId": "body",
+      "meshName": "body",
+      "name": "体表（皮肤）",
+      "parentId": null,
+      "anchor": [
+        -0.0006469935178756714,
+        0.7816244214773178,
+        0.10076770186424255
+      ],
+      "bounds": {
+        "min": [
+          -0.3341189920902252,
+          -0.0781112015247345,
+          -0.045247599482536316
+        ],
+        "max": [
+          0.3328250050544739,
+          1.6413600444793701,
+          0.24678300321102142
+        ]
+      },
+      "moduleIds": [],
+      "context": true,
+      "color": "#bec9c4",
+      "sourceIds": [
+        "BP9115"
+      ],
+      "conceptId": "FMA7163",
+      "elementIds": [
+        "FJ2810"
+      ]
+    },
+    {
+      "structureId": "pancreas",
+      "meshName": "pancreas",
+      "name": "胰腺实质",
+      "parentId": null,
+      "anchor": [
+        0.01238265074789524,
+        1.0413249731063843,
+        0.12089989706873894
+      ],
+      "bounds": {
+        "min": [
+          -0.04790480062365532,
+          1.0045499801635742,
+          0.09542080014944077
+        ],
+        "max": [
+          0.0726701021194458,
+          1.0780999660491943,
+          0.1463789939880371
+        ]
+      },
+      "moduleIds": [
+        "glucose"
+      ],
+      "context": false,
+      "color": "#e4ad70",
+      "sourceIds": [
+        "BP9199"
+      ],
+      "conceptId": "FMA63120",
+      "elementIds": [
+        "FJ2629"
+      ]
+    },
+    {
+      "structureId": "hypothalamus",
+      "meshName": "hypothalamus",
+      "name": "下丘脑",
+      "parentId": null,
+      "anchor": [
+        -0.0006539050955325365,
+        1.5421649813652039,
+        0.10120660066604614
+      ],
+      "bounds": {
+        "min": [
+          -0.008267680183053017,
+          1.532230019569397,
+          0.09223619848489761
+        ],
+        "max": [
+          0.006959869991987944,
+          1.5520999431610107,
+          0.11017700284719467
+        ]
+      },
+      "moduleIds": [
+        "thyroid",
+        "adrenal",
+        "gonadal",
+        "energy"
+      ],
+      "context": false,
+      "color": "#90aafa",
+      "sourceIds": [
+        "BP6496"
+      ],
+      "conceptId": "FMA62008",
+      "elementIds": [
+        "FJ1760",
+        "FJ1808"
+      ]
+    },
+    {
+      "structureId": "pituitary",
+      "meshName": "pituitary",
+      "name": "垂体",
+      "parentId": null,
+      "anchor": [
+        -0.0006357049569487572,
+        1.5290549993515015,
+        0.105833999812603
+      ],
+      "bounds": {
+        "min": [
+          -0.006791099905967712,
+          1.522570013999939,
+          0.10110499709844589
+        ],
+        "max": [
+          0.005519689992070198,
+          1.535539984703064,
+          0.1105630025267601
+        ]
+      },
+      "moduleIds": [
+        "thyroid",
+        "adrenal",
+        "gonadal"
+      ],
+      "context": false,
+      "color": "#b998f4",
+      "sourceIds": [
+        "BP4630"
+      ],
+      "conceptId": "FMA13889",
+      "elementIds": [
+        "FJ1796"
+      ]
+    },
+    {
+      "structureId": "adrenal-right",
+      "meshName": "adrenal-right",
+      "name": "右肾上腺",
+      "parentId": null,
+      "anchor": [
+        -0.046582299284636974,
+        1.0666599869728088,
+        0.08872375264763832
+      ],
+      "bounds": {
+        "min": [
+          -0.062534399330616,
+          1.0455199480056763,
+          0.07510550320148468
+        ],
+        "max": [
+          -0.03063019923865795,
+          1.0878000259399414,
+          0.10234200209379196
+        ]
+      },
+      "moduleIds": [
+        "adrenal"
+      ],
+      "context": false,
+      "color": "#f6b56d",
+      "sourceIds": [
+        "BP9132"
+      ],
+      "conceptId": "FMA15629",
+      "elementIds": [
+        "FJ3130"
+      ]
+    },
+    {
+      "structureId": "adrenal-left",
+      "meshName": "adrenal-left",
+      "name": "左肾上腺",
+      "parentId": null,
+      "anchor": [
+        0.051403299905359745,
+        1.0857799649238586,
+        0.07321025058627129
+      ],
+      "bounds": {
+        "min": [
+          0.02731500007212162,
+          1.0633399486541748,
+          0.06313499808311462
+        ],
+        "max": [
+          0.07549159973859787,
+          1.1082199811935425,
+          0.08328550308942795
+        ]
+      },
+      "moduleIds": [
+        "adrenal"
+      ],
+      "context": false,
+      "color": "#f6b56d",
+      "sourceIds": [
+        "BP9014"
+      ],
+      "conceptId": "FMA15630",
+      "elementIds": [
+        "FJ3129"
+      ]
+    },
+    {
+      "structureId": "kidney-right",
+      "meshName": "kidney-right",
+      "name": "右肾",
+      "parentId": null,
+      "anchor": [
+        -0.059001498855650425,
+        1.019025981426239,
+        0.08827754855155945
+      ],
+      "bounds": {
+        "min": [
+          -0.08757539838552475,
+          0.966812014579773,
+          0.06470009684562683
+        ],
+        "max": [
+          -0.0304275993257761,
+          1.071239948272705,
+          0.11185500025749207
+        ]
+      },
+      "moduleIds": [
+        "adrenal",
+        "calcium"
+      ],
+      "context": true,
+      "color": "#b77875",
+      "sourceIds": [
+        "BP8907"
+      ],
+      "conceptId": "FMA7204",
+      "elementIds": [
+        "FJ3147"
+      ]
+    },
+    {
+      "structureId": "kidney-left",
+      "meshName": "kidney-left",
+      "name": "左肾",
+      "parentId": null,
+      "anchor": [
+        0.06161145120859146,
+        1.0374670028686523,
+        0.07988820038735867
+      ],
+      "bounds": {
+        "min": [
+          0.032839901745319366,
+          0.9844939708709717,
+          0.05959140136837959
+        ],
+        "max": [
+          0.09038300067186356,
+          1.090440034866333,
+          0.10018499940633774
+        ]
+      },
+      "moduleIds": [
+        "adrenal",
+        "calcium"
+      ],
+      "context": true,
+      "color": "#b77875",
+      "sourceIds": [
+        "BP9289"
+      ],
+      "conceptId": "FMA7205",
+      "elementIds": [
+        "FJ3145"
+      ]
+    },
+    {
+      "structureId": "stomach",
+      "meshName": "stomach",
+      "name": "胃",
+      "parentId": null,
+      "anchor": [
+        0.038286201655864716,
+        1.0983850359916687,
+        0.1379249505698681
+      ],
+      "bounds": {
+        "min": [
+          -0.028951600193977356,
+          1.0398800373077393,
+          0.08147989958524704
+        ],
+        "max": [
+          0.10552400350570679,
+          1.1568900346755981,
+          0.19437000155448914
+        ]
+      },
+      "moduleIds": [
+        "glucose",
+        "energy"
+      ],
+      "context": true,
+      "color": "#c7a398",
+      "sourceIds": [
+        "BP7926"
+      ],
+      "conceptId": "FMA7148",
+      "elementIds": [
+        "FJ2564"
+      ]
+    },
+    {
+      "structureId": "duodenum",
+      "meshName": "duodenum",
+      "name": "十二指肠",
+      "parentId": null,
+      "anchor": [
+        -0.016647398471832275,
+        1.0313595235347748,
+        0.13040849566459656
+      ],
+      "bounds": {
+        "min": [
+          -0.06562429666519165,
+          0.9856089949607849,
+          0.10389299690723419
+        ],
+        "max": [
+          0.0323294997215271,
+          1.0771100521087646,
+          0.15692399442195892
+        ]
+      },
+      "moduleIds": [
+        "glucose"
+      ],
+      "context": true,
+      "color": "#d7b497",
+      "sourceIds": [
+        "BP8646"
+      ],
+      "conceptId": "FMA7206",
+      "elementIds": [
+        "FJ2573"
+      ]
+    },
+    {
+      "structureId": "liver",
+      "meshName": "liver",
+      "name": "肝脏",
+      "parentId": null,
+      "anchor": [
+        -0.010348603129386902,
+        1.1055400371551514,
+        0.12287084572017193
+      ],
+      "bounds": {
+        "min": [
+          -0.11506400257349014,
+          1.027940034866333,
+          0.043328698724508286
+        ],
+        "max": [
+          0.09436679631471634,
+          1.1831400394439697,
+          0.20241299271583557
+        ]
+      },
+      "moduleIds": [
+        "glucose",
+        "energy"
+      ],
+      "context": true,
+      "color": "#a46860",
+      "sourceIds": [
+        "BP9334"
+      ],
+      "conceptId": "FMA7197",
+      "elementIds": [
+        "FJ1883",
+        "FJ1893",
+        "FJ1913",
+        "FJ1914",
+        "FJ1916",
+        "FJ2386",
+        "FJ2404",
+        "FJ2405",
+        "FJ2409",
+        "FJ2415",
+        "FJ2416",
+        "FJ2816",
+        "FJ2818",
+        "FJ2819",
+        "FJ2820",
+        "FJ2821",
+        "FJ2822",
+        "FJ2823",
+        "FJ2824",
+        "FJ3071",
+        "FJ3072",
+        "FJ3073",
+        "FJ3074",
+        "FJ3075",
+        "FJ3076",
+        "FJ3077",
+        "FJ3081",
+        "FJ3083",
+        "FJ3086",
+        "FJ3088",
+        "FJ3089",
+        "FJ3090",
+        "FJ3091",
+        "FJ3092",
+        "FJ3093",
+        "FJ3095",
+        "FJ3096",
+        "FJ3102",
+        "FJ3103",
+        "FJ3104",
+        "FJ3105",
+        "FJ3106",
+        "FJ3107",
+        "FJ3108",
+        "FJ3109",
+        "FJ3110",
+        "FJ3111",
+        "FJ3112",
+        "FJ3113",
+        "FJ3114",
+        "FJ3115",
+        "FJ3116",
+        "FJ3117",
+        "FJ3122",
+        "FJ3123",
+        "FJ3124",
+        "FJ3125",
+        "FJ3126",
+        "FJ3127",
+        "FJ3128"
+      ]
+    },
+    {
+      "structureId": "testis-right",
+      "meshName": "testis-right",
+      "name": "右睾丸",
+      "parentId": null,
+      "anchor": [
+        -0.020652849692851305,
+        0.7047739923000336,
+        0.15227250009775162
+      ],
+      "bounds": {
+        "min": [
+          -0.030845999717712402,
+          0.690559983253479,
+          0.14119000732898712
+        ],
+        "max": [
+          -0.010459699667990208,
+          0.7189880013465881,
+          0.1633549928665161
+        ]
+      },
+      "moduleIds": [
+        "gonadal"
+      ],
+      "context": false,
+      "color": "#ed8ead",
+      "sourceIds": [
+        "BP9204"
+      ],
+      "conceptId": "FMA7211",
+      "elementIds": [
+        "FJ3142"
+      ]
+    },
+    {
+      "structureId": "testis-left",
+      "meshName": "testis-left",
+      "name": "左睾丸",
+      "parentId": null,
+      "anchor": [
+        0.01752781984396279,
+        0.7042180001735687,
+        0.15243449807167053
+      ],
+      "bounds": {
+        "min": [
+          0.007497540209442377,
+          0.689752995967865,
+          0.1413549929857254
+        ],
+        "max": [
+          0.0275580994784832,
+          0.7186830043792725,
+          0.16351400315761566
+        ]
+      },
+      "moduleIds": [
+        "gonadal"
+      ],
+      "context": false,
+      "color": "#ed8ead",
+      "sourceIds": [
+        "BP8578"
+      ],
+      "conceptId": "FMA7212",
+      "elementIds": [
+        "FJ3138"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "slot": "body",
+      "preset": "anatomicalSurface",
+      "color": "#bec9c4",
+      "structureIds": [
+        "body"
+      ]
+    },
+    {
+      "slot": "pancreas",
+      "preset": "anatomicalSurface",
+      "color": "#e4ad70",
+      "structureIds": [
+        "pancreas"
+      ]
+    },
+    {
+      "slot": "hypothalamus",
+      "preset": "anatomicalSurface",
+      "color": "#90aafa",
+      "structureIds": [
+        "hypothalamus"
+      ]
+    },
+    {
+      "slot": "pituitary",
+      "preset": "anatomicalSurface",
+      "color": "#b998f4",
+      "structureIds": [
+        "pituitary"
+      ]
+    },
+    {
+      "slot": "adrenal-right",
+      "preset": "anatomicalSurface",
+      "color": "#f6b56d",
+      "structureIds": [
+        "adrenal-right"
+      ]
+    },
+    {
+      "slot": "adrenal-left",
+      "preset": "anatomicalSurface",
+      "color": "#f6b56d",
+      "structureIds": [
+        "adrenal-left"
+      ]
+    },
+    {
+      "slot": "kidney-right",
+      "preset": "anatomicalSurface",
+      "color": "#b77875",
+      "structureIds": [
+        "kidney-right"
+      ]
+    },
+    {
+      "slot": "kidney-left",
+      "preset": "anatomicalSurface",
+      "color": "#b77875",
+      "structureIds": [
+        "kidney-left"
+      ]
+    },
+    {
+      "slot": "stomach",
+      "preset": "anatomicalSurface",
+      "color": "#c7a398",
+      "structureIds": [
+        "stomach"
+      ]
+    },
+    {
+      "slot": "duodenum",
+      "preset": "anatomicalSurface",
+      "color": "#d7b497",
+      "structureIds": [
+        "duodenum"
+      ]
+    },
+    {
+      "slot": "liver",
+      "preset": "anatomicalSurface",
+      "color": "#a46860",
+      "structureIds": [
+        "liver"
+      ]
+    },
+    {
+      "slot": "testis-right",
+      "preset": "anatomicalSurface",
+      "color": "#ed8ead",
+      "structureIds": [
+        "testis-right"
+      ]
+    },
+    {
+      "slot": "testis-left",
+      "preset": "anatomicalSurface",
+      "color": "#ed8ead",
+      "structureIds": [
+        "testis-left"
+      ]
+    }
+  ],
+  "cameraAnchors": [
+    {
+      "id": "overview",
+      "structureId": null,
+      "position": [
+        -0.0006469935178756714,
+        0.7816244214773178,
+        3.0007677018642425
+      ],
+      "target": [
+        -0.0006469935178756714,
+        0.7816244214773178,
+        0.10076770186424255
+      ]
+    },
+    {
+      "id": "focus-body",
+      "structureId": "body",
+      "position": [
+        -0.0006469935178756714,
+        0.7816244214773178,
+        3.883604443073273
+      ],
+      "target": [
+        -0.0006469935178756714,
+        0.7816244214773178,
+        0.10076770186424255
+      ]
+    },
+    {
+      "id": "focus-pancreas",
+      "structureId": "pancreas",
+      "position": [
+        0.01238265074789524,
+        1.0413249731063843,
+        0.38616468310356145
+      ],
+      "target": [
+        0.01238265074789524,
+        1.0413249731063843,
+        0.12089989706873894
+      ]
+    },
+    {
+      "id": "focus-hypothalamus",
+      "structureId": "hypothalamus",
+      "position": [
+        -0.0006539050955325365,
+        1.5421649813652039,
+        0.19120660066604614
+      ],
+      "target": [
+        -0.0006539050955325365,
+        1.5421649813652039,
+        0.10120660066604614
+      ]
+    },
+    {
+      "id": "focus-pituitary",
+      "structureId": "pituitary",
+      "position": [
+        -0.0006357049569487572,
+        1.5290549993515015,
+        0.195833999812603
+      ],
+      "target": [
+        -0.0006357049569487572,
+        1.5290549993515015,
+        0.105833999812603
+      ]
+    },
+    {
+      "id": "focus-adrenal-right",
+      "structureId": "adrenal-right",
+      "position": [
+        -0.046582299284636974,
+        1.0666599869728088,
+        0.18173992410302164
+      ],
+      "target": [
+        -0.046582299284636974,
+        1.0666599869728088,
+        0.08872375264763832
+      ]
+    },
+    {
+      "id": "focus-adrenal-left",
+      "structureId": "adrenal-left",
+      "position": [
+        0.051403299905359745,
+        1.0857799649238586,
+        0.17919876985251904
+      ],
+      "target": [
+        0.051403299905359745,
+        1.0857799649238586,
+        0.07321025058627129
+      ]
+    },
+    {
+      "id": "focus-kidney-right",
+      "structureId": "kidney-right",
+      "position": [
+        -0.059001498855650425,
+        1.019025981426239,
+        0.31801900267601013
+      ],
+      "target": [
+        -0.059001498855650425,
+        1.019025981426239,
+        0.08827754855155945
+      ]
+    },
+    {
+      "id": "focus-kidney-left",
+      "structureId": "kidney-left",
+      "position": [
+        0.06161145120859146,
+        1.0374670028686523,
+        0.3129695411771536
+      ],
+      "target": [
+        0.06161145120859146,
+        1.0374670028686523,
+        0.07988820038735867
+      ]
+    },
+    {
+      "id": "focus-stomach",
+      "structureId": "stomach",
+      "position": [
+        0.038286201655864716,
+        1.0983850359916687,
+        0.4337712787091732
+      ],
+      "target": [
+        0.038286201655864716,
+        1.0983850359916687,
+        0.1379249505698681
+      ]
+    },
+    {
+      "id": "focus-duodenum",
+      "structureId": "duodenum",
+      "position": [
+        -0.016647398471832275,
+        1.0313595235347748,
+        0.34590684771537783
+      ],
+      "target": [
+        -0.016647398471832275,
+        1.0313595235347748,
+        0.13040849566459656
+      ]
+    },
+    {
+      "id": "focus-liver",
+      "structureId": "liver",
+      "position": [
+        -0.010348603129386902,
+        1.1055400371551514,
+        0.5836186032742262
+      ],
+      "target": [
+        -0.010348603129386902,
+        1.1055400371551514,
+        0.12287084572017193
+      ]
+    },
+    {
+      "id": "focus-testis-right",
+      "structureId": "testis-right",
+      "position": [
+        -0.020652849692851305,
+        0.7047739923000336,
+        0.24227250009775161
+      ],
+      "target": [
+        -0.020652849692851305,
+        0.7047739923000336,
+        0.15227250009775162
+      ]
+    },
+    {
+      "id": "focus-testis-left",
+      "structureId": "testis-left",
+      "position": [
+        0.01752781984396279,
+        0.7042180001735687,
+        0.24243449807167053
+      ],
+      "target": [
+        0.01752781984396279,
+        0.7042180001735687,
+        0.15243449807167053
+      ]
+    }
+  ]
+}
