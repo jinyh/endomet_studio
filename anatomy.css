@@ -23,3 +23,8 @@
 .anatomy-scale small{font-size:9px;color:#8e9da5;letter-spacing:.06em}
 .anatomy-compass[hidden],.anatomy-scale[hidden]{display:none}
 .anatomy-structure:disabled{opacity:.45;cursor:default}
+.anatomy-mechanism{border-block:1px solid #35434c;padding:16px 0;margin:16px 0}
+.anatomy-mechanism h3{margin:0 0 8px;color:#8ebeb5}.anatomy-mechanism>strong{display:block;font-size:14px;font-weight:500;line-height:1.6}.anatomy-mechanism p{margin:10px 0;font-size:12px}
+.anatomy-reading{display:grid;gap:7px;padding:12px;background:#18312f;border-radius:7px;font-size:12px;color:#b4d5cd}.anatomy-reading b{font-size:25px;font-weight:500;font-variant-numeric:tabular-nums}.anatomy-reading small{font-size:11px;font-weight:400;color:#9bb7b3}
+.anatomy-mechanism ul{padding-left:16px;margin:14px 0;font-size:12px;line-height:1.9;color:#adbdc8}.anatomy-mechanism li+li{margin-top:6px}.anatomy-mechanism em{font-style:normal;color:#85c6b6;white-space:nowrap}.anatomy-mechanism button{display:block;font-size:12px;margin-top:12px;white-space:nowrap}.anatomy-mechanism .primary-btn{width:100%;padding:10px}
+@media(min-width:761px) and (min-height:700px){.anatomy-stage{position:sticky;top:18px}}

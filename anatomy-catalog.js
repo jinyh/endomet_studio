@@ -83,3 +83,21 @@ export function mechanismAnatomyTarget(manifest,moduleId,nodeId=null){
   if(moduleId==='energy'&&nodeId==='brain'&&structureIds.length)note='下丘脑用于中枢食欲调节的位置参照，不代表完整食欲调节网络。';
   return {structureIds,selected:structureIds[0]??null,note};
 }
+
+// Reverse navigation describes the current teaching graph, never a new organ-level solver.
+export function anatomyMechanismContext(manifest,moduleId,structureId){
+  const module=modules.find(m=>m.id===moduleId);if(!module)throw new Error('未知课程系统');
+  if(structureId!==null&&!manifest.labels.some(label=>label.structureId===structureId))throw new Error('当前图谱没有这个结构');
+  const pancreas=structureId==='pancreas'||structureId?.startsWith('pancreas-')||(structureId===null&&manifest.assetId==='hra-pancreas-detail');
+  if(structureId===null&&!pancreas)return null;
+  const nodeId=pancreas&&moduleId==='glucose'?'beta':Object.keys(mapping[moduleId]).find(id=>mapping[moduleId][id].includes(structureId));
+  if(!nodeId)return {nodeId:null,note:'当前任务没有为这一结构建立独立机制节点。可继续观察解剖关系，或从课程目录选择相关任务。'};
+  const node=module.nodes.find(n=>n[0]===nodeId),metric=module.metrics.find(([key])=>key===node[5]);
+  let note='通过当前任务的机制节点，观察它参与的调节关系。';
+  if(pancreas)note='胰腺提供器官位置参照；分泌过程在本课中由胰岛 β 细胞节点表示。器官分区不对应独立的分泌曲线。';
+  if(nodeId==='adrenal')note='当前网格表示肾上腺整体，本课连接的是皮质机制；皮质与髓质尚未分层。';
+  if(moduleId==='energy')note='下丘脑作为中枢食欲调节的位置参照，本课使用聚合信号。';
+  const label=id=>module.nodes.find(n=>n[0]===id)[1];
+  return {nodeId,nodeName:node[1],metricKey:metric[0],metricName:metric[1],note,
+    relations:module.edges.filter(([a,b])=>a===nodeId||b===nodeId).map(([a,b,sign])=>({from:label(a),to:label(b),effect:sign==='−'?'抑制':'促进'}))};
+}

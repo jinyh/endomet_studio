@@ -350,10 +350,14 @@ export class AnatomyScene {
     this.renderer.setSize(width,height);this.camera.aspect=width/height;this.camera.updateProjectionMatrix();if(this.root)this.applyView();
   }
   pick(event){
-    if(!this.root||!this.pointerStart||Math.hypot(event.clientX-this.pointerStart.x,event.clientY-this.pointerStart.y)>6)return;
+    const start=this.pointerStart;this.pointerStart=null;
+    if(!this.root||!start||event.button>0||Math.hypot(event.clientX-start.x,event.clientY-start.y)>6)return;
     const rect=this.renderer.domElement.getBoundingClientRect();this.pointer.set((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1);this.raycaster.setFromCamera(this.pointer,this.camera);
     const candidates=this.entries.filter(entry=>entry.mesh.visible&&entry.label.structureId!=='body').map(entry=>entry.mesh);
-    const hit=this.raycaster.intersectObjects(candidates,false)[0];if(hit)this.onSelect(hit.object.userData.structureId);
+    const hits=this.raycaster.intersectObjects(candidates,false);
+    // Faint contextual shells should not intercept a click on the solid organ behind them.
+    const hit=hits.find(({object})=>{const entry=this.entries.find(item=>item.mesh===object);if(object.material===entry?.silhouetteMaterial)return false;return (Array.isArray(object.material)?object.material:[object.material]).some(material=>!material.transparent||material.opacity>=.5);})??hits[0];
+    if(hit)this.onSelect(hit.object.userData.structureId);
   }
   draw(now){
     if(!this.active||this.destroyed||this.failed)return;

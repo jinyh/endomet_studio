@@ -6,7 +6,7 @@ import {getMechanism,validateMechanism} from './mechanisms.js';
 import {loadSchematicAsset} from './assets.js';
 import {getCourse,createCourseProgress,recordPrediction,completeCourseStep,courseSummary,predictionFeedback} from './courses.js';
 import {viewContext,captureExperiment,historyEntries,teachingText as copy} from './workspace.js';
-import {loadAnatomyManifest,relatedAnatomy,validateAnatomyCommand,anatomyPacks,mechanismAnatomyTarget} from './anatomy-catalog.js';
+import {loadAnatomyManifest,relatedAnatomy,validateAnatomyCommand,anatomyPacks,mechanismAnatomyTarget,anatomyMechanismContext} from './anatomy-catalog.js';
 
 const $=s=>document.querySelector(s);
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -25,7 +25,7 @@ let toastTimer,scene,lastFrame=performance.now(),paintTimer=0;
 document.querySelector('#app').innerHTML=`
 <div class="shell">
   <aside class="sidebar" aria-label="系统导航">
-    <div class="brand"><div class="brand-symbol">E</div><div><div class="brand-name">EndoMet Studio</div><small>内分泌与代谢实验室</small></div></div>
+    <div class="brand"><div class="brand-symbol">E</div><div><div class="brand-name">EndoMet Studio</div><small>内分泌与代谢虚拟实验室</small></div></div>
     <button class="side-button" data-view="overview"><span class="side-icon">▦</span>学习首页</button>
     <button class="side-button" data-view="catalog"><span class="side-icon">▤</span>课程目录</button>
     <button class="side-button" data-view="history"><span class="side-icon">◷</span>学习记录</button>
@@ -50,7 +50,7 @@ document.querySelector('#app').innerHTML=`
         <section class="guide" aria-label="机制助教"><div class="guide-mark">✧</div><div class="guide-body"><div class="guide-title">机制助教<span>本地规则解释 · 未连接大模型</span></div><div class="guide-output" id="guide-output" aria-live="polite"></div><div class="guide-actions"><button data-action="explain">为什么现在变化？</button><button data-action="focus-key">定位关键结构</button><button data-action="compare-guide">与正常情景比较</button></div><form class="guide-form" id="guide-form"><label class="sr-only" for="guide-input">输入实验指令</label><input id="guide-input" maxlength="160" placeholder="试试：跳到 120 分钟 / 定位胰岛 β 细胞"><button type="submit">执行 ↗</button></form></div></section>
       </section>
       <section class="page" id="page-anatomy" aria-label="解剖定位">
-        <div class="anatomy-intro"><div><div class="eyebrow">REFERENCE ANATOMY</div><h2>把机制放回人体中</h2><p>观察参考人体中的器官外形、位置与毗邻关系。</p></div><button class="secondary-btn" data-view="lab">返回当前机制实验 ↗</button></div>
+        <div class="anatomy-intro"><div><div class="eyebrow">REFERENCE ANATOMY</div><h2>把机制放回人体中</h2><p>点击器官或标签，查看它与当前学习任务的联系。</p></div><button class="secondary-btn" data-view="lab">返回当前机制实验 ↗</button></div>
         <div class="anatomy-session" id="anatomy-session"></div><p class="anatomy-mapping-note" id="anatomy-mapping-note" hidden></p>
         <div class="anatomy-toolbar"><label class="anatomy-picker">定位结构<select class="select" id="anatomy-select" disabled><option>正在准备解剖资源</option></select></label><div class="anatomy-layers" aria-label="解剖观察层级"><button data-anatomy-layer="body" aria-pressed="true" disabled>全身定位</button><button data-anatomy-layer="regional" aria-pressed="false" disabled>局部关系</button><button data-anatomy-layer="organ" aria-pressed="false" disabled>器官特写</button></div><button class="icon-btn" data-action="anatomy-manual" disabled>自由观察</button></div>
         <div class="anatomy-layout"><div class="anatomy-stage"><div class="anatomy-viewport" id="anatomy-scene" aria-label="真实参考解剖三维视图"></div><div class="anatomy-status" id="anatomy-status" role="status">首次打开时载入真实解剖模型。</div><div class="anatomy-orientation">成人男性参考人体 · 解剖形状保持固定</div></div><aside class="paper-panel anatomy-details"><h2 id="anatomy-selected-name">参考解剖</h2><p id="anatomy-selection-note"></p><label class="toggle-row">显示周围结构<input type="checkbox" id="anatomy-context" checked disabled></label><div class="anatomy-reference" id="anatomy-reference"></div><label class="anatomy-source-picker" id="anatomy-source-picker" hidden>胰腺参考模型<select class="select" id="anatomy-source"><option value="reference">BodyParts3D · 原图谱</option><option value="hra">HRA · 五区独立参考</option></select><small>HRA 使用独立参考坐标，仅在器官特写中显示。</small></label><h3>当前系统的相关结构</h3><div id="anatomy-related"></div><p id="anatomy-coverage" class="anatomy-coverage"></p><button class="text-btn" data-action="anatomy-retry" hidden>重新载入模型 ↗</button><details class="anatomy-credits"><summary>模型来源与使用说明</summary><div id="anatomy-attribution"></div><p>当前使用参考解剖的表面网格。器官到组织、细胞的内部结构需要另行接入，放大表面模型不会生成微观解剖。</p></details></aside></div>
@@ -65,6 +65,7 @@ document.querySelector('#app').innerHTML=`
   </main>
 </div><div id="toast" class="toast" role="status" hidden></div>`;
 $('.stage-column').insertBefore($('.timeline'),$('.focus-note'));
+$('#anatomy-selection-note').insertAdjacentHTML('afterend','<section class="anatomy-mechanism" id="anatomy-mechanism" aria-label="器官与当前任务" aria-live="polite"></section>');
 
 function toast(text){$('#toast').textContent=text;$('#toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').hidden=true,3500);}
 function log(label){records.push({module:state.module.id,scenario:state.scenario,time:state.time,label,date:new Date().toISOString(),version:MODEL_VERSION});records=records.slice(-50);try{localStorage.setItem(storageKey,JSON.stringify(records));}catch{toast('当前浏览器无法保存记录，本次操作仍可继续。');}}
@@ -170,16 +171,31 @@ function updateAnatomyPanel(){
   $('#anatomy-source').disabled=!ready;$('#anatomy-source').value=anatomyState.detailSource;
   $('#anatomy-source-picker').hidden=!ready||(!independent&&anatomyState.selected!=='pancreas');
   document.querySelectorAll('[data-anatomy-structure]').forEach(button=>button.disabled=!ready);
+  $('#anatomy-mechanism').hidden=!ready;
   if(!ready)return;
   const selected=anatomyState.manifest.labels.find(label=>label.structureId===anatomyState.selected),related=relatedAnatomy(anatomyState.manifest,m.id);
   $('#anatomy-select').value=anatomyState.selected??'';
   $('#anatomy-selected-name').textContent=selected?.name??(independent?'胰腺分区参考':'全身概览');
+  renderAnatomyMechanism();
   $('#anatomy-selection-note').textContent=independent?'可独立选择胰头、颈、体、尾和钩突。此图谱未与全身参考配准。':'全身看位置，局部看邻近关系，特写看器官外形。';
   $('#anatomy-reference').textContent=anatomyPacks[anatomyState.pack].name;
   $('.anatomy-orientation').textContent=independent?'独立胰腺参考 · 非全身配准模型':'成人男性参考人体 · 原始解剖比例';
   $('#anatomy-related').innerHTML=related.map(label=>`<button class="anatomy-structure ${label.structureId===anatomyState.selected?'selected':''}" data-anatomy-structure="${escape(label.structureId)}" aria-pressed="${label.structureId===anatomyState.selected}"><i style="background:${label.color}"></i>${escape(label.name)}${label.context?'<small>参照</small>':''}</button>`).join('')||'<p>当前参考图谱没有本系统对应结构。</p>';
-  const notes={thyroid:'甲状腺、甲状旁腺本体待接入；可选择下丘脑与垂体查看上游位置。',calcium:'甲状旁腺和骨组织待接入；肾脏可用于位置参照。',gonadal:'本版为男性参考解剖；卵巢与女性生殖系统待独立接入。',energy:'脂肪组织分布尚未建模；下丘脑与肝脏提供已接入的空间参照。',glucose:independent?'此模型提供器官分区，不包含胰管、胰岛或细胞层级。':'当前显示胰腺实质表面；选择 HRA 可比较另一图谱的器官分区。'};
+  const notes={thyroid:'甲状腺、甲状旁腺本体待接入；可选择下丘脑与垂体查看上游位置。',calcium:'甲状旁腺和骨组织待接入；肾脏可用于位置参照。',gonadal:'本版为男性参考解剖；卵巢与女性生殖系统待独立接入。',energy:'脂肪组织分布尚未建模；下丘脑与肝脏提供已接入的空间参照。',glucose:independent?'此模型提供器官分区，不包含胰管、胰岛或细胞层级。':'本图谱包含胰腺实质表面；选择胰腺后可用 HRA 比较器官分区。'};
   $('#anatomy-coverage').textContent=notes[m.id]??'当前肾上腺为整体外形，皮质与髓质尚未分层。';
+}
+function renderAnatomyMechanism(){
+  const context=anatomyMechanismContext(anatomyState.manifest,state.module.id,anatomyState.selected),box=$('#anatomy-mechanism');
+  if(!context){box.innerHTML='<p>选择器官或标签，查看机制联系。</p>';return;}
+  if(!context.nodeId){box.innerHTML=`<p>${copy(context.note)}</p>`;return;}
+  const value=sample(state.trajectories.current,state.time)[context.metricKey],meaning=getMechanism(state.module.id).states.find(s=>s.key===context.metricKey)?.meaning;
+  box.innerHTML=`<h3>在当前任务中</h3><strong>${copy(context.nodeName)}</strong><p>${copy(context.note)}</p><div class="anatomy-reading"><span>关联观察量 · ${copy(context.metricName)}</span><b>${value.toFixed(2)}<small> × 基准</small></b><small>${copy(`${formatTime(state.time)} ${state.module.unit}`)} · 全系统教学值</small></div>${meaning?`<p>${copy(meaning)}</p>`:''}<ul>${context.relations.map(r=>`<li>${copy(r.from)} <em>${r.effect} →</em> ${copy(r.to)}</li>`).join('')}</ul><button class="primary-btn" data-action="anatomy-mechanism">查看机制与曲线 ↗</button><button class="text-btn" data-action="anatomy-evidence">查看机制依据 ↗</button>`;
+}
+function openAnatomyMechanism(view='lab'){
+  if(anatomyState.status!=='ready')return;
+  const context=anatomyMechanismContext(anatomyState.manifest,state.module.id,anatomyState.selected);
+  if(!context?.nodeId)return;
+  command({type:'focus',nodeId:context.nodeId});showView(view);
 }
 async function anatomyCommand(raw){
   if(raw.type==='layer'&&raw.layer==='body'&&anatomyState.status==='error'){anatomyState.layer='body';await ensureAnatomy('overview');return snapshot();}
@@ -188,6 +204,7 @@ async function anatomyCommand(raw){
   if(cmd.type==='focus'){
     anatomyState.selected=cmd.structureId;anatomyState.manual=false;anatomyState.mappingNote='';
     if(anatomyState.pack!=='hra'){anatomyState.baseSelected=cmd.structureId;if(cmd.structureId!=='pancreas')anatomyState.detailSource='reference';if(cmd.structureId===null)anatomyState.layer='body';}
+    if(cmd.structureId!==null&&cmd.structureId!=='body'&&anatomyState.layer==='body')anatomyState.layer='regional';
   }
   if(cmd.type==='layer'){
     anatomyState.layer=anatomyState.selected===null&&anatomyState.pack!=='hra'?'body':cmd.layer;anatomyState.manual=false;
@@ -340,6 +357,8 @@ document.addEventListener('click',e=>{
   else if(action==='locate-anatomy')locateMechanismAnatomy();
   else if(action==='anatomy-retry')ensureAnatomy();
   else if(action==='anatomy-manual')anatomyCommand({type:'manual',enabled:!anatomyState.manual});
+  else if(action==='anatomy-mechanism')openAnatomyMechanism();
+  else if(action==='anatomy-evidence')openAnatomyMechanism('knowledge');
   else if(action==='play-toggle')command({type:state.playing?'pause':'play'});
   else if(action==='restart')command({type:'seek',time:0});
   else if(action==='overview-camera')command({type:'focus',nodeId:null});
