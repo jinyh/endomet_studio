@@ -1,6 +1,6 @@
 {
-  "assetId": "bodyparts3d-endocrine",
-  "version": "0.3.0",
+  "assetId": "bodyparts3d-overview",
+  "version": "0.4.0",
   "system": "endocrine",
   "representation": "anatomical",
   "source": {
@@ -96,7 +96,7 @@
       "description": "One identical right-handed rigid rotation and mm-to-m scale for every source vertex; no translation, independent recentering, shape replacement, or additional simplification. Source x points to subject left, y posterior, z superior; output +Z anterior.",
       "coordinateReferenceUrl": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20130619/coordinate_system.png"
     },
-    "modifications": "Selected official ELEMENT meshes, merged each concept into one independently named mesh without duplicate elements, rotated all coordinates identically and converted mm to m, computed vertex normals, assigned teaching colors, converted OBJ to indexed GLB. Original 99% mesh reduction retained.",
+    "modifications": "Selected official ELEMENT meshes, merged each concept into one independently named mesh without duplicate elements, rotated all coordinates identically and converted mm to m, computed vertex normals, assigned teaching colors, converted OBJ to indexed GLB. Original 99% mesh reduction retained. Overview variant: simplify body and liver only using meshoptimizer v0.25, LockBorder + ErrorAbsolute, no Prune; retain selected source vertices in their original coordinate positions and recompute only simplified normals. Other 11 meshes unchanged.",
     "coverageNotes": [
       "Adult male reference model; not a patient-specific scan or a medically reviewed teaching atlas.",
       "Pancreas mesh is pancreatic parenchyma FMA63120, not pancreatic ducts or resolved islets.",
@@ -104,7 +104,147 @@
       "Thyroid and parathyroid glands are absent from the downloaded IS-A/PART-OF concept lists; no substitute shapes are supplied.",
       "Testes represent the male reference only; female gonadal anatomy, islet microstructure and hormone flow are not supplied."
     ],
-    "referenceSpaceId": "bodyparts3d-taro-male-v4"
+    "referenceSpaceId": "bodyparts3d-taro-male-v4",
+    "reduction": {
+      "tool": "meshoptimizer",
+      "version": "0.25",
+      "toolUrl": "https://raw.githubusercontent.com/zeux/meshoptimizer/v0.25/js/meshopt_simplifier.js",
+      "toolSha256": "d1a8e4efccf1dd9d5e6baa229f611bfb2ec43279c789653bce039eb7c06cf5cf",
+      "sourceGlbSha256": "015626344976037ece294da9a81f46ce34737e469d2d0755b219f5d787378a24",
+      "method": "index-only topology-aware simplification; no component pruning; no vertex relocation",
+      "flags": [
+        "LockBorder",
+        "ErrorAbsolute"
+      ],
+      "requestedTriangleCounts": {
+        "body": 25000,
+        "liver": 20000
+      },
+      "requestedAbsoluteErrorsMeters": {
+        "body": 0.0008,
+        "liver": 0.0004
+      },
+      "errorMeaning": "Algorithm-reported approximation error, not a verified Hausdorff bound or medical accuracy claim.",
+      "meshes": [
+        {
+          "structureId": "body",
+          "sourceTriangles": 203382,
+          "triangles": 25000,
+          "vertices": 12938,
+          "simplified": true,
+          "reportedAbsoluteErrorMeters": 0.0007789412629790604,
+          "boundsDeltaMeters": 0.0003859996795654297
+        },
+        {
+          "structureId": "pancreas",
+          "sourceTriangles": 4272,
+          "triangles": 4272,
+          "vertices": 2153,
+          "simplified": false,
+          "reportedAbsoluteErrorMeters": 0,
+          "boundsDeltaMeters": 0.0
+        },
+        {
+          "structureId": "hypothalamus",
+          "sourceTriangles": 4078,
+          "triangles": 4078,
+          "vertices": 2374,
+          "simplified": false,
+          "reportedAbsoluteErrorMeters": 0,
+          "boundsDeltaMeters": 0.0
+        },
+        {
+          "structureId": "pituitary",
+          "sourceTriangles": 1164,
+          "triangles": 1164,
+          "vertices": 609,
+          "simplified": false,
+          "reportedAbsoluteErrorMeters": 0,
+          "boundsDeltaMeters": 0.0
+        },
+        {
+          "structureId": "adrenal-right",
+          "sourceTriangles": 2294,
+          "triangles": 2294,
+          "vertices": 1149,
+          "simplified": false,
+          "reportedAbsoluteErrorMeters": 0,
+          "boundsDeltaMeters": 0.0
+        },
+        {
+          "structureId": "adrenal-left",
+          "sourceTriangles": 3996,
+          "triangles": 3996,
+          "vertices": 2000,
+          "simplified": false,
+          "reportedAbsoluteErrorMeters": 0,
+          "boundsDeltaMeters": 0.0
+        },
+        {
+          "structureId": "kidney-right",
+          "sourceTriangles": 2310,
+          "triangles": 2310,
+          "vertices": 1163,
+          "simplified": false,
+          "reportedAbsoluteErrorMeters": 0,
+          "boundsDeltaMeters": 0.0
+        },
+        {
+          "structureId": "kidney-left",
+          "sourceTriangles": 2982,
+          "triangles": 2982,
+          "vertices": 1497,
+          "simplified": false,
+          "reportedAbsoluteErrorMeters": 0,
+          "boundsDeltaMeters": 0.0
+        },
+        {
+          "structureId": "stomach",
+          "sourceTriangles": 1810,
+          "triangles": 1810,
+          "vertices": 914,
+          "simplified": false,
+          "reportedAbsoluteErrorMeters": 0,
+          "boundsDeltaMeters": 0.0
+        },
+        {
+          "structureId": "duodenum",
+          "sourceTriangles": 1860,
+          "triangles": 1860,
+          "vertices": 977,
+          "simplified": false,
+          "reportedAbsoluteErrorMeters": 0,
+          "boundsDeltaMeters": 0.0
+        },
+        {
+          "structureId": "liver",
+          "sourceTriangles": 191622,
+          "triangles": 21694,
+          "vertices": 18617,
+          "simplified": true,
+          "reportedAbsoluteErrorMeters": 0.00039915560046210885,
+          "boundsDeltaMeters": 0.00015997886657714844
+        },
+        {
+          "structureId": "testis-right",
+          "sourceTriangles": 212,
+          "triangles": 212,
+          "vertices": 108,
+          "simplified": false,
+          "reportedAbsoluteErrorMeters": 0,
+          "boundsDeltaMeters": 0.0
+        },
+        {
+          "structureId": "testis-left",
+          "sourceTriangles": 210,
+          "triangles": 210,
+          "vertices": 107,
+          "simplified": false,
+          "reportedAbsoluteErrorMeters": 0,
+          "boundsDeltaMeters": 0.0
+        }
+      ]
+    }
   },
   "review": {
     "status": "draft",
@@ -135,10 +275,10 @@
   "lods": [
     {
       "level": 0,
-      "uri": "./bodyparts3d-endocrine.glb",
-      "triangleCount": 420192,
-      "sha256": "015626344976037ece294da9a81f46ce34737e469d2d0755b219f5d787378a24",
-      "byteLength": 10461228
+      "uri": "./bodyparts3d-overview.glb",
+      "triangleCount": 71882,
+      "byteLength": 1947632,
+      "sha256": "c5e5a7abe5d79b91bd4d84b0203ecd829dbaa291c1a45107125d860aa7426dda"
     }
   ],
   "labels": [
@@ -148,20 +288,20 @@
       "name": "体表（皮肤）",
       "parentId": null,
       "anchor": [
-        -0.0006469935178756714,
-        0.7816244214773178,
-        0.10076770186424255
+        -0.0007755011320114136,
+        0.7815976999700069,
+        0.10059939883649349
       ],
       "bounds": {
         "min": [
-          -0.3341189920902252,
-          -0.0781112015247345,
-          -0.045247599482536316
+          -0.3339900076389313,
+          -0.07795459777116776,
+          -0.045239198952913284
         ],
         "max": [
-          0.3328250050544739,
-          1.6413600444793701,
-          0.24678300321102142
+          0.33243900537490845,
+          1.6411499977111816,
+          0.24643799662590027
         ]
       },
       "moduleIds": [],
@@ -505,20 +645,20 @@
       "name": "肝脏",
       "parentId": null,
       "anchor": [
-        -0.010348603129386902,
-        1.1055400371551514,
-        0.12287084572017193
+        -0.010276101529598236,
+        1.1055600047111511,
+        0.12285844795405865
       ],
       "bounds": {
         "min": [
-          -0.11506400257349014,
-          1.027940034866333,
-          0.043328698724508286
+          -0.11491899937391281,
+          1.0281000137329102,
+          0.043369900435209274
         ],
         "max": [
           0.09436679631471634,
-          1.1831400394439697,
-          0.20241299271583557
+          1.183019995689392,
+          0.20234699547290802
         ]
       },
       "moduleIds": [
@@ -790,14 +930,14 @@
       "id": "focus-body",
       "structureId": "body",
       "position": [
-        -0.0006469935178756714,
-        0.7816244214773178,
-        3.883604443073273
+        -0.0007755011320114136,
+        0.7815976999700069,
+        3.8826295088976623
       ],
       "target": [
-        -0.0006469935178756714,
-        0.7816244214773178,
-        0.10076770186424255
+        -0.0007755011320114136,
+        0.7815976999700069,
+        0.10059939883649349
       ]
     },
     {
@@ -930,14 +1070,14 @@
       "id": "focus-liver",
       "structureId": "liver",
       "position": [
-        -0.010348603129386902,
-        1.1055400371551514,
-        0.5836186032742262
+        -0.010276101529598236,
+        1.1055600047111511,
+        0.5832871984690429
       ],
       "target": [
-        -0.010348603129386902,
-        1.1055400371551514,
-        0.12287084572017193
+        -0.010276101529598236,
+        1.1055600047111511,
+        0.12285844795405865
       ]
     },
     {

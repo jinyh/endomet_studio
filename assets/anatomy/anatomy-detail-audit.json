@@ -1,0 +1,193 @@
+{
+  "overview": [
+    {
+      "structureId": "body",
+      "sourceTriangles": 203382,
+      "triangles": 25000,
+      "vertices": 12938,
+      "simplified": true,
+      "reportedAbsoluteErrorMeters": 0.0007789412629790604,
+      "boundsDeltaMeters": 0.0003859996795654297
+    },
+    {
+      "structureId": "pancreas",
+      "sourceTriangles": 4272,
+      "triangles": 4272,
+      "vertices": 2153,
+      "simplified": false,
+      "reportedAbsoluteErrorMeters": 0,
+      "boundsDeltaMeters": 0.0
+    },
+    {
+      "structureId": "hypothalamus",
+      "sourceTriangles": 4078,
+      "triangles": 4078,
+      "vertices": 2374,
+      "simplified": false,
+      "reportedAbsoluteErrorMeters": 0,
+      "boundsDeltaMeters": 0.0
+    },
+    {
+      "structureId": "pituitary",
+      "sourceTriangles": 1164,
+      "triangles": 1164,
+      "vertices": 609,
+      "simplified": false,
+      "reportedAbsoluteErrorMeters": 0,
+      "boundsDeltaMeters": 0.0
+    },
+    {
+      "structureId": "adrenal-right",
+      "sourceTriangles": 2294,
+      "triangles": 2294,
+      "vertices": 1149,
+      "simplified": false,
+      "reportedAbsoluteErrorMeters": 0,
+      "boundsDeltaMeters": 0.0
+    },
+    {
+      "structureId": "adrenal-left",
+      "sourceTriangles": 3996,
+      "triangles": 3996,
+      "vertices": 2000,
+      "simplified": false,
+      "reportedAbsoluteErrorMeters": 0,
+      "boundsDeltaMeters": 0.0
+    },
+    {
+      "structureId": "kidney-right",
+      "sourceTriangles": 2310,
+      "triangles": 2310,
+      "vertices": 1163,
+      "simplified": false,
+      "reportedAbsoluteErrorMeters": 0,
+      "boundsDeltaMeters": 0.0
+    },
+    {
+      "structureId": "kidney-left",
+      "sourceTriangles": 2982,
+      "triangles": 2982,
+      "vertices": 1497,
+      "simplified": false,
+      "reportedAbsoluteErrorMeters": 0,
+      "boundsDeltaMeters": 0.0
+    },
+    {
+      "structureId": "stomach",
+      "sourceTriangles": 1810,
+      "triangles": 1810,
+      "vertices": 914,
+      "simplified": false,
+      "reportedAbsoluteErrorMeters": 0,
+      "boundsDeltaMeters": 0.0
+    },
+    {
+      "structureId": "duodenum",
+      "sourceTriangles": 1860,
+      "triangles": 1860,
+      "vertices": 977,
+      "simplified": false,
+      "reportedAbsoluteErrorMeters": 0,
+      "boundsDeltaMeters": 0.0
+    },
+    {
+      "structureId": "liver",
+      "sourceTriangles": 191622,
+      "triangles": 21694,
+      "vertices": 18617,
+      "simplified": true,
+      "reportedAbsoluteErrorMeters": 0.00039915560046210885,
+      "boundsDeltaMeters": 0.00015997886657714844
+    },
+    {
+      "structureId": "testis-right",
+      "sourceTriangles": 212,
+      "triangles": 212,
+      "vertices": 108,
+      "simplified": false,
+      "reportedAbsoluteErrorMeters": 0,
+      "boundsDeltaMeters": 0.0
+    },
+    {
+      "structureId": "testis-left",
+      "sourceTriangles": 210,
+      "triangles": 210,
+      "vertices": 107,
+      "simplified": false,
+      "reportedAbsoluteErrorMeters": 0,
+      "boundsDeltaMeters": 0.0
+    }
+  ],
+  "hra": [
+    {
+      "structureId": "pancreas-body",
+      "sourceMeshName": "VH_M_body_of_pancreas",
+      "ontologyId": "UBERON:0001150",
+      "vertices": 25649,
+      "triangles": 12807,
+      "topology": {
+        "method": "Exact-position virtual welding for analysis only; GLB is not modified",
+        "uniquePositions": 6521,
+        "boundaryEdges": 235,
+        "nonManifoldEdges": 0
+      },
+      "positionSha256": "fcfc646cc5990ff2bb3167f2ad31633ac6a01d6bce76a0ebcaade8387e4bf345"
+    },
+    {
+      "structureId": "pancreas-tail",
+      "sourceMeshName": "VH_M_tail_of_pancreas",
+      "ontologyId": "UBERON:0001151",
+      "vertices": 39141,
+      "triangles": 19539,
+      "topology": {
+        "method": "Exact-position virtual welding for analysis only; GLB is not modified",
+        "uniquePositions": 9835,
+        "boundaryEdges": 129,
+        "nonManifoldEdges": 0
+      },
+      "positionSha256": "395f91108f80de610cc52c61354e36443cf61a6db991eb2b0a069204e747216b"
+    },
+    {
+      "structureId": "pancreas-head",
+      "sourceMeshName": "VH_M_head_of_pancreas",
+      "ontologyId": "UBERON:0001069",
+      "vertices": 9253,
+      "triangles": 4617,
+      "topology": {
+        "method": "Exact-position virtual welding for analysis only; GLB is not modified",
+        "uniquePositions": 2367,
+        "boundaryEdges": 121,
+        "nonManifoldEdges": 12
+      },
+      "positionSha256": "ddb7fb03300a347b8c04e91d6e3688968aa0bb84e70d19fb17783827a5ca5b29"
+    },
+    {
+      "structureId": "pancreas-neck",
+      "sourceMeshName": "VH_M_neck_of_pancreas",
+      "ontologyId": "FMA:14517",
+      "vertices": 1539,
+      "triangles": 765,
+      "topology": {
+        "method": "Exact-position virtual welding for analysis only; GLB is not modified",
+        "uniquePositions": 443,
+        "boundaryEdges": 121,
+        "nonManifoldEdges": 0
+      },
+      "positionSha256": "c4425033c6ec0cfbea2b611229bacd44966eae22a10e23806a44228ae7f97e9b"
+    },
+    {
+      "structureId": "pancreas-uncinate",
+      "sourceMeshName": "VH_M_uncinate_process_of_the_pancreas",
+      "ontologyId": "UBERON:0010373",
+      "vertices": 2404,
+      "triangles": 1202,
+      "topology": {
+        "method": "Exact-position virtual welding for analysis only; GLB is not modified",
+        "uniquePositions": 630,
+        "boundaryEdges": 56,
+        "nonManifoldEdges": 0
+      },
+      "positionSha256": "ecb14fa6034b2ca33bc640e405e1cbd932f2bede7fb415c941a89b2ce1ddc93f"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "checkedAt": "2026-09-20",
+  "nihEntry": "https://3d.nih.gov/entries/21013?version=1",
+  "nihSnapshotSha256": "b41e05828ef76423ba4d0c5752ca825226cb4825db4e0b0edb9c8205ca3659fb",
+  "licenseLinkOnSpecificEntry": "https://creativecommons.org/licenses/by/4.0/",
+  "licenseTextSha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411",
+  "creatorAttribution": "Kristen Browne; Heidi Schlehlein. 2023. 3D Reference Organ for Pancreas, Male v1.2. https://doi.org/10.48539/HBM368.XMJZ.722. Human Reference Atlas; CC BY 4.0.",
+  "nihInputFile": {
+    "fileId": 607619,
+    "name": "3d-vh-m-pancreas.glb",
+    "byteLength": 2110152,
+    "eTag": "6e84b3e001c6db03f4be51be61f0fc1b"
+  },
+  "canonicalDownloadedFile": {
+    "url": "https://cdn.humanatlas.io/digital-objects/ref-organ/pancreas-male/v1.2/assets/3d-vh-m-pancreas.glb",
+    "sha256": "6fc5de9825c2ce8449b5bd5c0751d6b754bca4aa1c63ea2353dd09efa5c44a15",
+    "md5": "6e84b3e001c6db03f4be51be61f0fc1b",
+    "byteLength": 2110152
+  },
+  "sourceBinarySha256": "7732f9f480093c43cca7b9ff2f095a5986917c820698e4e15638caf17d4a018c",
+  "identityCheck": "Canonical HRA file length and MD5 exactly match the NIH v1 input-file metadata; NIH S3 direct download returned HTTP 403, canonical HRA download succeeded.",
+  "crosswalkSha256": "02751ff545038977af564a40890b0cdd3fac41d8b9c21a28897dc6ef6602b653",
+  "mapping": [
+    {
+      "structureId": "pancreas-body",
+      "sourceMeshName": "VH_M_body_of_pancreas",
+      "ontologyId": "UBERON:0001150",
+      "vertices": 25649,
+      "triangles": 12807,
+      "topology": {
+        "method": "Exact-position virtual welding for analysis only; GLB is not modified",
+        "uniquePositions": 6521,
+        "boundaryEdges": 235,
+        "nonManifoldEdges": 0
+      },
+      "positionSha256": "fcfc646cc5990ff2bb3167f2ad31633ac6a01d6bce76a0ebcaade8387e4bf345"
+    },
+    {
+      "structureId": "pancreas-tail",
+      "sourceMeshName": "VH_M_tail_of_pancreas",
+      "ontologyId": "UBERON:0001151",
+      "vertices": 39141,
+      "triangles": 19539,
+      "topology": {
+        "method": "Exact-position virtual welding for analysis only; GLB is not modified",
+        "uniquePositions": 9835,
+        "boundaryEdges": 129,
+        "nonManifoldEdges": 0
+      },
+      "positionSha256": "395f91108f80de610cc52c61354e36443cf61a6db991eb2b0a069204e747216b"
+    },
+    {
+      "structureId": "pancreas-head",
+      "sourceMeshName": "VH_M_head_of_pancreas",
+      "ontologyId": "UBERON:0001069",
+      "vertices": 9253,
+      "triangles": 4617,
+      "topology": {
+        "method": "Exact-position virtual welding for analysis only; GLB is not modified",
+        "uniquePositions": 2367,
+        "boundaryEdges": 121,
+        "nonManifoldEdges": 12
+      },
+      "positionSha256": "ddb7fb03300a347b8c04e91d6e3688968aa0bb84e70d19fb17783827a5ca5b29"
+    },
+    {
+      "structureId": "pancreas-neck",
+      "sourceMeshName": "VH_M_neck_of_pancreas",
+      "ontologyId": "FMA:14517",
+      "vertices": 1539,
+      "triangles": 765,
+      "topology": {
+        "method": "Exact-position virtual welding for analysis only; GLB is not modified",
+        "uniquePositions": 443,
+        "boundaryEdges": 121,
+        "nonManifoldEdges": 0
+      },
+      "positionSha256": "c4425033c6ec0cfbea2b611229bacd44966eae22a10e23806a44228ae7f97e9b"
+    },
+    {
+      "structureId": "pancreas-uncinate",
+      "sourceMeshName": "VH_M_uncinate_process_of_the_pancreas",
+      "ontologyId": "UBERON:0010373",
+      "vertices": 2404,
+      "triangles": 1202,
+      "topology": {
+        "method": "Exact-position virtual welding for analysis only; GLB is not modified",
+        "uniquePositions": 630,
+        "boundaryEdges": 56,
+        "nonManifoldEdges": 0
+      },
+      "positionSha256": "ecb14fa6034b2ca33bc640e405e1cbd932f2bede7fb415c941a89b2ce1ddc93f"
+    }
+  ]
+}

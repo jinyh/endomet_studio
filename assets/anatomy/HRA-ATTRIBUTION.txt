@@ -1,0 +1,7 @@
+Kristen Browne; Heidi Schlehlein. 2023. 3D Reference Organ for Pancreas, Male v1.2. https://doi.org/10.48539/HBM368.XMJZ.722. Human Reference Atlas; CC BY 4.0.
+
+Rename five mesh/node IDs for application binding and add attribution; retain complete source binary chunk, normals, original PBR material, hierarchy and coordinates. No added detail, smoothing, decimation, textures or shape edits.
+
+License verified on https://3d.nih.gov/entries/21013?version=1
+License: https://creativecommons.org/licenses/by/4.0/
+Source: https://cdn.humanatlas.io/digital-objects/ref-organ/pancreas-male/v1.2/assets/3d-vh-m-pancreas.glb

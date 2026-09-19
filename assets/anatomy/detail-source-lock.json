@@ -1,0 +1,53 @@
+{
+  "files": [
+    {
+      "name": "CC-BY-4.0.txt",
+      "url": "https://creativecommons.org/licenses/by/4.0/legalcode.txt",
+      "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411",
+      "byteLength": 18657
+    },
+    {
+      "name": "hra-pancreas-v1.2.glb",
+      "url": "https://cdn.humanatlas.io/digital-objects/ref-organ/pancreas-male/v1.2/assets/3d-vh-m-pancreas.glb",
+      "sha256": "6fc5de9825c2ce8449b5bd5c0751d6b754bca4aa1c63ea2353dd09efa5c44a15",
+      "byteLength": 2110152
+    },
+    {
+      "name": "hra-pancreas-crosswalk.csv",
+      "url": "https://cdn.humanatlas.io/digital-objects/ref-organ/pancreas-male/v1.2/assets/crosswalk.csv",
+      "sha256": "02751ff545038977af564a40890b0cdd3fac41d8b9c21a28897dc6ef6602b653",
+      "byteLength": 363
+    },
+    {
+      "name": "nih-pancreas-v1.html",
+      "url": "https://3d.nih.gov/entries/21013?version=1",
+      "sha256": "b41e05828ef76423ba4d0c5752ca825226cb4825db4e0b0edb9c8205ca3659fb",
+      "byteLength": 315321
+    },
+    {
+      "name": "hra-library.yaml",
+      "url": "https://humanatlas.io/assets/content/3d-reference-library-page/data.yaml",
+      "sha256": "eb95d19acce0b469b05ae8be9a5484583bc95e6fcea5ab2fc743dd48944eaed3",
+      "byteLength": 327333
+    },
+    {
+      "name": "hra-pancreas-metadata.jsonld",
+      "url": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2",
+      "sha256": "2e9d6f4eff859dba750933757601b6235972222f481715e9c66b3c3e96c6f995",
+      "byteLength": 238675
+    },
+    {
+      "name": "meshopt_simplifier.cjs",
+      "url": "https://raw.githubusercontent.com/zeux/meshoptimizer/v0.25/js/meshopt_simplifier.js",
+      "sha256": "d1a8e4efccf1dd9d5e6baa229f611bfb2ec43279c789653bce039eb7c06cf5cf",
+      "byteLength": 53114
+    },
+    {
+      "name": "meshoptimizer-LICENSE.md",
+      "url": "https://raw.githubusercontent.com/zeux/meshoptimizer/v0.25/LICENSE.md",
+      "sha256": "e4a26033e3551fb2722888949fbb41e77aee628e8e8f04dcffeee301aa7e5634",
+      "byteLength": 1079
+    }
+  ],
+  "note": "GLB/tool hashes are pinned in builder; website snapshots record this audit, not future immutable content."
+}

@@ -1,0 +1,208 @@
+{
+  "sourceUrl": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2",
+  "accept": "application/ld+json",
+  "sourceSha256": "2e9d6f4eff859dba750933757601b6235972222f481715e9c66b3c3e96c6f995",
+  "nativeGltfUnitCheck": "For every region, GLB bounds extent in metres * 1000 equals the official x/y/z dimensions in millimetres within 0.0001 mm. No coordinate transform applied.",
+  "entities": [
+    {
+      "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_body_of_pancreas",
+      "skos:prefLabel": "body of pancreas",
+      "ccf:has_reference_organ": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#primary"
+      },
+      "@type": [
+        "obo:UBERON_0001150",
+        "owl:NamedIndividual",
+        "ccf:SpatialEntity"
+      ],
+      "ccf:organ_owner_sex": "Male",
+      "dct:creator": [
+        {
+          "@id": "https://orcid.org/0000-0002-3333-5646"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-4066-7531"
+        }
+      ],
+      "ccf:representation_of": {
+        "@id": "obo:UBERON_0001150"
+      },
+      "ccf:has_object_reference": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_body_of_pancreas_obj"
+      },
+      "ccf:z_dimension": "45.5476921799999985296381055377423763275146484375",
+      "ccf:y_dimension": "38.12927700000005870606401003897190093994140625",
+      "rdfs:label": "Spatial entity of male body of pancreas",
+      "ccf:rui_rank": {
+        "@value": "1",
+        "@type": "xsd:integer"
+      },
+      "ccf:dimension_unit": "millimeter",
+      "ccf:x_dimension": "50.3756054699999964441303745843470096588134765625",
+      "dct:created": "2023-12-15",
+      "ccf:has_placement": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_body_of_pancreas_global_placement"
+      }
+    },
+    {
+      "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_tail_of_pancreas",
+      "ccf:has_reference_organ": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#primary"
+      },
+      "ccf:y_dimension": "35.0498850000000174986780621111392974853515625",
+      "ccf:x_dimension": "52.64068720000000922709659789688885211944580078125",
+      "dct:creator": [
+        {
+          "@id": "https://orcid.org/0000-0003-4066-7531"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3333-5646"
+        }
+      ],
+      "ccf:has_placement": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_tail_of_pancreas_global_placement"
+      },
+      "ccf:rui_rank": {
+        "@value": "2",
+        "@type": "xsd:integer"
+      },
+      "ccf:has_object_reference": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_tail_of_pancreas_obj"
+      },
+      "skos:prefLabel": "tail of pancreas",
+      "@type": [
+        "obo:UBERON_0001151",
+        "owl:NamedIndividual",
+        "ccf:SpatialEntity"
+      ],
+      "dct:created": "2023-12-15",
+      "ccf:z_dimension": "49.72000150000000218142304220236837863922119140625",
+      "ccf:representation_of": {
+        "@id": "obo:UBERON_0001151"
+      },
+      "ccf:organ_owner_sex": "Male",
+      "ccf:dimension_unit": "millimeter",
+      "rdfs:label": "Spatial entity of male tail of pancreas"
+    },
+    {
+      "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_head_of_pancreas",
+      "ccf:organ_owner_sex": "Male",
+      "ccf:has_placement": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_head_of_pancreas_global_placement"
+      },
+      "ccf:y_dimension": "47.61637699999999995270627550780773162841796875",
+      "@type": [
+        "obo:UBERON_0001069",
+        "ccf:SpatialEntity",
+        "owl:NamedIndividual"
+      ],
+      "ccf:has_object_reference": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_head_of_pancreas_obj"
+      },
+      "dct:created": "2023-12-15",
+      "dct:creator": [
+        {
+          "@id": "https://orcid.org/0000-0003-4066-7531"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3333-5646"
+        }
+      ],
+      "rdfs:label": "Spatial entity of male head of pancreas",
+      "ccf:z_dimension": "42.6902577999999977009792928583920001983642578125",
+      "skos:prefLabel": "head of pancreas",
+      "ccf:representation_of": {
+        "@id": "obo:UBERON_0001069"
+      },
+      "ccf:rui_rank": {
+        "@value": "3",
+        "@type": "xsd:integer"
+      },
+      "ccf:dimension_unit": "millimeter",
+      "ccf:has_reference_organ": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#primary"
+      },
+      "ccf:x_dimension": "42.49322882000000589641786064021289348602294921875"
+    },
+    {
+      "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_neck_of_pancreas",
+      "ccf:rui_rank": {
+        "@value": "4",
+        "@type": "xsd:integer"
+      },
+      "ccf:x_dimension": "19.57165009999999938372639007866382598876953125",
+      "ccf:z_dimension": "26.681402699999996031010596198029816150665283203125",
+      "ccf:organ_owner_sex": "Male",
+      "rdfs:label": "Spatial entity of male neck of pancreas",
+      "@type": [
+        "owl:NamedIndividual",
+        "fma:fma14517",
+        "ccf:SpatialEntity"
+      ],
+      "ccf:has_placement": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_neck_of_pancreas_global_placement"
+      },
+      "ccf:has_object_reference": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_neck_of_pancreas_obj"
+      },
+      "ccf:y_dimension": "28.3853000000000292857293970882892608642578125",
+      "dct:creator": [
+        {
+          "@id": "https://orcid.org/0000-0002-3333-5646"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-4066-7531"
+        }
+      ],
+      "skos:prefLabel": "Neck of pancreas",
+      "ccf:has_reference_organ": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#primary"
+      },
+      "dct:created": "2023-12-15",
+      "ccf:dimension_unit": "millimeter",
+      "ccf:representation_of": {
+        "@id": "fma:fma14517"
+      }
+    },
+    {
+      "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_uncinate_process_of_the_pancreas",
+      "ccf:rui_rank": {
+        "@value": "5",
+        "@type": "xsd:integer"
+      },
+      "dct:created": "2023-12-15",
+      "skos:prefLabel": "uncinate process of pancreas",
+      "@type": [
+        "owl:NamedIndividual",
+        "ccf:SpatialEntity",
+        "obo:UBERON_0010373"
+      ],
+      "dct:creator": [
+        {
+          "@id": "https://orcid.org/0000-0002-3333-5646"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-4066-7531"
+        }
+      ],
+      "ccf:z_dimension": "33.738662000000005036781658418476581573486328125",
+      "ccf:dimension_unit": "millimeter",
+      "ccf:has_placement": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_uncinate_process_of_the_pancreas_global_placement"
+      },
+      "rdfs:label": "Spatial entity of male uncinate process of the pancreas",
+      "ccf:x_dimension": "31.269395000000002937667886726558208465576171875",
+      "ccf:has_object_reference": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#VH_M_uncinate_process_of_the_pancreas_obj"
+      },
+      "ccf:has_reference_organ": {
+        "@id": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2#primary"
+      },
+      "ccf:representation_of": {
+        "@id": "obo:UBERON_0010373"
+      },
+      "ccf:organ_owner_sex": "Male",
+      "ccf:y_dimension": "17.8978789999999889914761297404766082763671875"
+    }
+  ]
+}

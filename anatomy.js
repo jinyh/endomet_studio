@@ -3,7 +3,114 @@ import {GLTFLoader} from './vendor/GLTFLoader.js';
 
 const MAX_MODEL_BYTES=96*1024*1024;
 const finiteVector=v=>v.every(Number.isFinite);
+const vector3=v=>Array.isArray(v)&&v.length===3&&finiteVector(v);
 const labelColumnWidth=width=>Math.min(128,Math.max(76,width*.2));
+const DIRECTIONS={left:[1,0,0],superior:[0,1,0],anterior:[0,0,1]};
+
+export function resolveAnatomyDirections(manifest){
+  const directions=manifest.coordinates?.anatomicalDirections??(manifest.assetId==='bodyparts3d-endocrine'?DIRECTIONS:null);
+  if(!directions)return null;
+  const axes=['left','superior','anterior'].map(key=>directions[key]);
+  if(!axes.every(vector3))throw new Error('解剖方向必须包含三个有限单位向量。');
+  const [left,up,front]=axes.map(axis=>new THREE.Vector3().fromArray(axis));
+  if([left,up,front].some(axis=>Math.abs(axis.length()-1)>1e-4)||Math.abs(left.dot(up))>1e-4||Math.abs(left.dot(front))>1e-4||Math.abs(up.dot(front))>1e-4||left.clone().cross(up).dot(front)<.9999)throw new Error('解剖方向必须是正交右手坐标。');
+  return {left:left.toArray(),superior:up.toArray(),anterior:front.toArray()};
+}
+
+const REGION_IDS={head:['hypothalamus','pituitary'],adrenal:['adrenal-left','adrenal-right','kidney-left','kidney-right'],abdomen:['pancreas','duodenum','stomach','liver'],pelvis:['testis-left','testis-right']};
+const regionFor=label=>label?.region??Object.keys(REGION_IDS).find(region=>REGION_IDS[region].includes(label?.structureId))??'organ';
+
+export function planAnatomyView(labels,selectedId,layer,contextVisible,relevantIds=[]){
+  const selected=labels.find(label=>label.structureId===selectedId),region=regionFor(selected),relevant=new Set(relevantIds);
+  const regionalIds=new Set(REGION_IDS[region]??[selectedId]);
+  regionalIds.add(selectedId);for(const label of labels)if(label.region&&label.region===region)regionalIds.add(label.structureId);
+  // A pancreas view keeps useful immediate neighbors, without the large overlying liver.
+  if(selectedId==='pancreas')regionalIds.delete('liver');
+  const effectiveLayer=selected?layer:'body';
+  return {region,layer:effectiveLayer,entries:labels.map(label=>{
+    const id=label.structureId,isSelected=id===selectedId,isRelevant=relevant.has(id),body=id==='body';
+    let visible=isSelected||!label.context||(contextVisible&&(body||isRelevant));
+    if(effectiveLayer==='organ')visible=isSelected;
+    if(effectiveLayer==='regional')visible=!body&&regionalIds.has(id)&&(isSelected||!label.context||contextVisible);
+    const silhouette=visible&&!isSelected&&contextVisible&&(body||(effectiveLayer==='regional'&&['stomach','liver'].includes(id)));
+    return {id,visible,silhouette,selected:isSelected,relevant:isRelevant,labelVisible:visible&&!body&&(isSelected||isRelevant),frame:visible&&!body&&!silhouette};
+  })};
+}
+
+export function anatomyCameraDirection(region,layer,selectedId,directions){
+  const axes=directions??DIRECTIONS;
+  let offset=[0,0,1];
+  if(layer!=='body'){
+    if(region==='head')offset=[.65,.12,1];
+    else if(region==='adrenal')offset=[selectedId?.endsWith('right')?-.24:.24,.18,-1];
+    else if(region==='abdomen')offset=[.22,.24,1];
+    else if(region==='pelvis')offset=[.18,.08,1];
+  }
+  return new THREE.Vector3().fromArray(axes.left).multiplyScalar(offset[0]).addScaledVector(new THREE.Vector3().fromArray(axes.superior),offset[1]).addScaledVector(new THREE.Vector3().fromArray(axes.anterior),offset[2]).normalize().toArray();
+}
+
+export function fitAnatomyCamera(min,max,aspect,{direction=[0,0,1],up=[0,1,0],fov=38,padding=1.16}={}){
+  if(!vector3(min)||!vector3(max)||min.some((n,i)=>n>max[i])||!Number.isFinite(aspect)||aspect<=0||!Number.isFinite(fov)||fov<=0||fov>=175||!Number.isFinite(padding)||padding<1||!vector3(direction)||!vector3(up))throw new Error('解剖镜头参数无效。');
+  const forward=new THREE.Vector3().fromArray(direction),vertical=new THREE.Vector3().fromArray(up);
+  if(forward.length()<1e-8||vertical.length()<1e-8)throw new Error('解剖镜头方向无效。');
+  forward.normalize();const right=vertical.clone().cross(forward);
+  if(right.length()<1e-5)throw new Error('解剖镜头方向与上方向不能平行。');
+  right.normalize();vertical.copy(forward).cross(right).normalize();
+  const target=new THREE.Vector3().fromArray(min).add(new THREE.Vector3().fromArray(max)).multiplyScalar(.5),tangent=Math.tan(fov*Math.PI/360);
+  let distance=.008;
+  for(const x of [min[0],max[0]])for(const y of [min[1],max[1]])for(const z of [min[2],max[2]]){
+    const corner=new THREE.Vector3(x,y,z).sub(target);
+    distance=Math.max(distance,corner.dot(forward)+Math.max(Math.abs(corner.dot(right))/(tangent*aspect),Math.abs(corner.dot(vertical))/tangent)*padding);
+  }
+  return {target:target.toArray(),position:target.clone().addScaledVector(forward,distance).toArray(),up:vertical.toArray(),distance};
+}
+
+export function projectAnatomyScale(camera,anchor,width,maxPixels=96){
+  if(!vector3(anchor)||!Number.isFinite(width)||width<=0)return null;
+  const origin=new THREE.Vector3().fromArray(anchor),view=origin.clone().applyMatrix4(camera.matrixWorldInverse);
+  if(-view.z<=camera.near)return null;
+  const right=new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld,0),a=origin.clone().project(camera),b=origin.clone().add(right).project(camera);
+  const pixelsPerMeter=Math.abs(b.x-a.x)*width/2;
+  if(!Number.isFinite(pixelsPerMeter)||pixelsPerMeter<=0)return null;
+  const maximum=maxPixels/pixelsPerMeter,power=10**Math.floor(Math.log10(maximum));
+  const meters=([5,2,1].find(value=>value*power<=maximum)??1)*power;
+  const value=meters>=1?meters:meters>=.01?meters*100:meters*1000,unit=meters>=1?'m':meters>=.01?'cm':'mm';
+  return {meters,pixels:meters*pixelsPerMeter,label:`${Number(value.toPrecision(3))} ${unit}`};
+}
+
+export function projectAnatomyDirections(camera,directions){
+  const inverse=camera.quaternion.clone().invert(),axes=directions??DIRECTIONS;
+  return [['left','左','右','x'],['superior','上','下','y'],['anterior','前','后','z']].flatMap(([key,positive,negative,axis])=>{
+    const vector=new THREE.Vector3().fromArray(axes[key]).applyQuaternion(inverse);
+    return (directions?[1,-1]:[1]).map(sign=>({label:directions?(sign>0?positive:negative):axis.toUpperCase(),axis,x:vector.x*sign,y:-vector.y*sign,z:vector.z*sign}));
+  });
+}
+
+const TISSUES={pancreas:{color:'#cfb394',roughness:.5},liver:{color:'#86534c',roughness:.4},kidney:{color:'#9c655d',roughness:.43},adrenal:{color:'#c3a873',roughness:.58},stomach:{color:'#c29c91',roughness:.51},duodenum:{color:'#c9a698',roughness:.52},hypothalamus:{color:'#c7acaa',roughness:.64},pituitary:{color:'#b99593',roughness:.55},testis:{color:'#c8b79e',roughness:.5}};
+
+export function createAnatomyMaterial(source,label){
+  const tissue=TISSUES[label.structureId.split('-')[0]]??{color:label.color??'#b9aaa0',roughness:.56};
+  const material=source.isMeshStandardMaterial?source.clone():new THREE.MeshStandardMaterial();
+  if(!source.isMeshStandardMaterial){for(const key of ['map','normalMap','bumpMap','aoMap','emissiveMap','alphaMap','color','side','opacity','transparent'])if(source[key]!==undefined)material[key]=source[key]?.clone&&source[key].isColor?source[key].clone():source[key];}
+  if(!material.map)material.color.set(tissue.color);
+  if(!material.roughnessMap)material.roughness=tissue.roughness;
+  if(!material.metalnessMap)material.metalness=0;
+  material.envMapIntensity=.65;
+  return material;
+}
+
+function createSilhouetteMaterial(color='#81929b',opacity=.2){
+  return new THREE.ShaderMaterial({uniforms:{tint:{value:new THREE.Color(color)},opacity:{value:opacity}},vertexShader:'varying vec3 surfaceNormal; varying vec3 viewPosition; void main(){vec4 view=modelViewMatrix*vec4(position,1.0);surfaceNormal=normalize(normalMatrix*normal);viewPosition=-view.xyz;gl_Position=projectionMatrix*view;}',fragmentShader:'uniform vec3 tint; uniform float opacity; varying vec3 surfaceNormal; varying vec3 viewPosition; void main(){float edge=pow(1.0-abs(dot(normalize(surfaceNormal),normalize(viewPosition))),2.4);gl_FragColor=vec4(tint,edge*opacity);}',transparent:true,depthWrite:false,side:THREE.FrontSide,toneMapped:false});
+}
+
+function makeStudioEnvironment(renderer){
+  const studio=new THREE.Scene(),panels=[];
+  studio.background=new THREE.Color('#30383d');
+  for(const [position,scale,intensity] of [[[-3,4,3],[4,5],5],[[4,1,2],[3,5],2],[[1,3,-4],[3,3],3]]){
+    const panel=new THREE.Mesh(new THREE.PlaneGeometry(...scale),new THREE.MeshBasicMaterial({color:new THREE.Color().setScalar(intensity),side:THREE.DoubleSide}));panel.position.fromArray(position);panel.lookAt(0,0,0);studio.add(panel);panels.push(panel);
+  }
+  const generator=new THREE.PMREMGenerator(renderer),environment=generator.fromScene(studio,.02,.1,50);generator.dispose();for(const panel of panels){panel.geometry.dispose();panel.material.dispose();}return environment;
+}
 
 // Callouts stay in side columns. Crowded secondary labels are omitted rather than
 // moved to a distant anatomical region; every visible callout retains its anchor.
@@ -17,6 +124,7 @@ export function layoutAnatomyLabels(points,width,height){
       const x=side==='left'?edge+labelWidth/2:width-edge-labelWidth/2;
       for(const offset of [0,-gap,gap,-gap*2,gap*2]){
         const y=Math.max(edge+halfHeight,Math.min(height-edge-halfHeight,point.anchorY+offset));
+        if((side==='right'&&y<142)||(side==='left'&&y>height-76))continue;
         if(Math.abs(y-point.anchorY)>72||placements.some(item=>item.side===side&&Math.abs(item.y-y)<gap))continue;
         candidates.push({x,y,side,cost:Math.abs(y-point.anchorY)+(side===preferred?0:18)});
       }
@@ -76,29 +184,31 @@ export function fitAnatomyBounds(min,max,aspect,fov=38,padding=1.2){
   return {target:min.map((n,i)=>(n+max[i])/2),distance};
 }
 
-function disposeObject(root){
-  const geometries=new Set(),materials=new Set(),textures=new Set();
+function disposeObject(root,extraMaterials=[]){
+  const geometries=new Set(),materials=new Set(extraMaterials),textures=new Set();
   root?.traverse(object=>{
     if(object.geometry)geometries.add(object.geometry);
     for(const material of object.material?(Array.isArray(object.material)?object.material:[object.material]):[]){
-      materials.add(material);for(const value of Object.values(material))if(value?.isTexture)textures.add(value);
+      materials.add(material);
     }
   });
+  for(const material of materials)for(const value of Object.values(material))if(value?.isTexture)textures.add(value);
   textures.forEach(item=>item.dispose());materials.forEach(item=>item.dispose());geometries.forEach(item=>item.dispose());
 }
 
 export class AnatomyScene {
   constructor(container,{onSelect=()=>{},onStatus=()=>{}}={}){
-    this.host=container;this.onSelect=onSelect;this.onStatus=onStatus;this.active=true;this.destroyed=false;this.layer='body';this.contextVisible=true;this.selected=null;this.manual=false;this.entries=[];this.loadVersion=0;
+    this.host=container;this.onSelect=onSelect;this.onStatus=onStatus;this.active=true;this.destroyed=false;this.layer='body';this.contextVisible=true;this.selected=null;this.manual=false;this.entries=[];this.loadVersion=0;this.relevant=new Set();
     this.reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches??false;
     this.scene=new THREE.Scene();this.camera=new THREE.PerspectiveCamera(38,1,0.001,100);this.camera.position.set(0,0,3);
     this.target=new THREE.Vector3();this.eye=new THREE.Vector3(0,0,3);this.raycaster=new THREE.Raycaster();this.pointer=new THREE.Vector2();
     try{this.renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});}
     catch(error){this.failed=true;this.status('error','当前设备无法开启解剖三维视图。请使用支持 WebGL 2 的浏览器。');return;}
-    this.renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio||1,1.7));this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.domElement.className='anatomy-canvas';container.prepend(this.renderer.domElement);
-    this.scene.add(new THREE.HemisphereLight(0xe2edff,0x495568,2));
-    const key=new THREE.DirectionalLight(0xffefd9,2.5);key.position.set(2,3,4);this.scene.add(key);
-    const rim=new THREE.DirectionalLight(0xa8caff,1.6);rim.position.set(-3,1,-2);this.scene.add(rim);
+    this.renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio||1,2));this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.08;this.renderer.domElement.className='anatomy-canvas';container.prepend(this.renderer.domElement);
+    this.environment=makeStudioEnvironment(this.renderer);this.scene.environment=this.environment.texture;this.scene.environmentIntensity=.65;
+    this.scene.add(new THREE.HemisphereLight(0xf3ece4,0x485663,.32));this.scene.add(this.camera);
+    for(const [color,intensity,position] of [[0xffead9,2.2,[-3,4,3]],[0xd8e6f3,.7,[4,1,2]],[0xf5ece1,1.1,[1,2,-3]]]){const light=new THREE.DirectionalLight(color,intensity);light.position.fromArray(position);light.target.position.set(0,0,-2);this.camera.add(light,light.target);}
+    this.createMeasurementGuides();
     this.pointerDown=event=>{this.pointerStart={x:event.clientX,y:event.clientY};};
     this.pointerUp=event=>this.pick(event);
     this.contextLost=event=>{event.preventDefault();this.failed=true;this.setActive(false);this.status('error','WebGL 上下文已丢失，请重新载入解剖模型。');};
@@ -106,11 +216,34 @@ export class AnatomyScene {
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(container);this.resize();this.draw=this.draw.bind(this);
   }
   status(state,message,details){if(!this.destroyed)this.onStatus({state,message,...(details?{details}:{})});}
+  createMeasurementGuides(){
+    const namespace='http://www.w3.org/2000/svg';
+    this.compass=document.createElement('div');this.compass.className='anatomy-compass';this.compass.hidden=true;this.compass.title='方向随视角旋转；左、右指参考人体自身的左、右。';
+    this.compassSvg=document.createElementNS(namespace,'svg');this.compassSvg.setAttribute('viewBox','0 0 112 108');this.compassSvg.setAttribute('role','img');this.compassSvg.setAttribute('aria-label','随观察相机旋转的坐标方向');
+    this.compassAxes=Array.from({length:6},()=>{const group=document.createElementNS(namespace,'g'),line=document.createElementNS(namespace,'line'),dot=document.createElementNS(namespace,'circle'),text=document.createElementNS(namespace,'text');line.setAttribute('x1','56');line.setAttribute('y1','52');dot.setAttribute('r','2');text.setAttribute('text-anchor','middle');text.setAttribute('dominant-baseline','middle');group.append(line,dot,text);this.compassSvg.append(group);return {group,line,dot,text};});
+    this.compassTitle=document.createElement('span');this.compass.append(this.compassSvg,this.compassTitle);this.host.append(this.compass);
+    this.scaleGuide=document.createElement('div');this.scaleGuide.className='anatomy-scale';this.scaleGuide.hidden=true;this.scaleGuide.title='当前观察中心平面的参考长度。';this.scaleLabel=document.createElement('span');this.scaleRule=document.createElement('i');this.scaleRule.className='anatomy-scale-rule';const caption=document.createElement('small');caption.textContent='焦点平面';this.scaleGuide.append(this.scaleLabel,this.scaleRule,caption);this.host.append(this.scaleGuide);
+  }
+  updateMeasurementGuides(){
+    const projected=projectAnatomyDirections(this.camera,this.directions);
+    this.compassAxes.forEach((elements,index)=>{
+      const axis=projected[index];elements.group.style.display=axis?'':'none';if(!axis)return;
+      const length=Math.hypot(axis.x,axis.y),towardViewer=length<.2&&axis.z>0;
+      if(length<.2&&!towardViewer){elements.group.style.display='none';return;}
+      elements.group.dataset.axis=axis.axis;elements.group.style.opacity=axis.z<0?'.48':'1';
+      const x=56+axis.x*34,y=52+axis.y*34;
+      elements.line.setAttribute('x2',String(x));elements.line.setAttribute('y2',String(y));elements.line.style.display=towardViewer?'none':'';elements.dot.setAttribute('cx',String(x));elements.dot.setAttribute('cy',String(y));elements.dot.style.display=towardViewer?'none':'';
+      elements.text.setAttribute('x',String(towardViewer?56:56+axis.x*46));elements.text.setAttribute('y',String(towardViewer?52:52+axis.y*46));elements.text.textContent=axis.label;
+    });
+    const scale=projectAnatomyScale(this.camera,this.controls.target.toArray(),this.host.clientWidth,Math.min(100,this.host.clientWidth*.23));this.scaleGuide.hidden=!scale;
+    if(scale){this.scaleLabel.textContent=scale.label;this.scaleRule.style.width=`${scale.pixels}px`;}
+  }
   async load(manifest,manifestUrl){
     if(this.destroyed||this.failed)return false;
     const version=++this.loadVersion;this.abort?.abort();this.abort=new AbortController();this.clear();this.status('loading','正在载入真实解剖模型…');
     let root=null;
     try{
+      const directions=resolveAnatomyDirections(manifest);
       const lod=manifest.lods.find(item=>item.level===0)??manifest.lods[0];
       const url=resolveAnatomyModelUrl(lod.uri,manifestUrl,location.href);
       const response=await fetch(url,{signal:this.abort.signal,credentials:'same-origin',redirect:'error'});
@@ -122,7 +255,6 @@ export class AnatomyScene {
       if(this.destroyed||version!==this.loadVersion){disposeObject(root);return false;}
       const {OrbitControls}=await import('./vendor/OrbitControls.js');
       if(this.destroyed||version!==this.loadVersion){disposeObject(root);return false;}
-      if(!this.controls){this.controls=new OrbitControls(this.camera,this.renderer.domElement);this.controls.enableDamping=!this.reduced;this.controls.enablePan=true;this.controls.enabled=this.manual;}
       root.updateMatrixWorld(true);
       const meshes=[];root.traverse(object=>{if(object.isMesh)meshes.push(object);});
       const byName=new Map();for(const mesh of meshes){if(byName.has(mesh.name))throw new Error(`模型网格名称重复：${mesh.name}`);byName.set(mesh.name,mesh);}
@@ -139,13 +271,16 @@ export class AnatomyScene {
       const oldMaterials=new Set();
       for(const entry of entries){
         const {mesh,label}=entry;for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])oldMaterials.add(material);
-        const color=new THREE.Color(label.color??(label.context?'#a4b2c2':'#e8b690'));
-        mesh.material=new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:0.02,roughness:0.67,metalness:0,transparent:!!label.context,opacity:label.context?(label.structureId==='body'||/skin|body|皮肤|体表/i.test(label.name)?0.07:0.2):1,depthWrite:!label.context,side:THREE.DoubleSide});
+        const originals=Array.isArray(mesh.material)?mesh.material:[mesh.material];entry.surfaceMaterials=originals.map(material=>createAnatomyMaterial(material,label));entry.baseAppearance=entry.surfaceMaterials.map(material=>({color:material.color.clone(),opacity:material.opacity,transparent:material.transparent,depthWrite:material.depthWrite}));
+        mesh.material=Array.isArray(mesh.material)?entry.surfaceMaterials:entry.surfaceMaterials[0];
+        if(!entry.surfaceMaterials.some(material=>material.map))entry.silhouetteMaterial=createSilhouetteMaterial(label.structureId==='body'?'#8b9ba4':'#b9b3aa',label.structureId==='body'?.3:.38);
         if(!mesh.geometry.attributes.normal)mesh.geometry.computeVertexNormals();
-        mesh.userData.structureId=label.structureId;mesh.renderOrder=label.context?1:0;
+        mesh.userData.structureId=label.structureId;
       }
-      for(const material of oldMaterials){for(const value of Object.values(material))if(value?.isTexture)value.dispose();material.dispose();}
-      this.root=root;this.entries=entries;this.manifest=manifest;this.scene.add(root);this.selected=null;
+      // Clones retain the original GLB textures; only the superseded material objects are disposed.
+      for(const material of oldMaterials)material.dispose();
+      this.directions=directions;this.camera.up.fromArray(directions?.superior??[0,1,0]);this.controls?.dispose();this.controls=new OrbitControls(this.camera,this.renderer.domElement);this.controls.enableDamping=!this.reduced;this.controls.enablePan=true;this.controls.enabled=this.manual;
+      this.root=root;this.entries=entries;this.manifest=manifest;this.scene.add(root);this.selected=null;this.compass.hidden=false;this.scaleGuide.hidden=false;this.compassTitle.textContent=directions?'患者方向':'模型坐标 · 方向未标定';
       const svgNamespace='http://www.w3.org/2000/svg';this.leaders=document.createElementNS(svgNamespace,'svg');this.leaders.classList.add('anatomy-leaders');this.leaders.setAttribute('aria-hidden','true');Object.assign(this.leaders.style,{position:'absolute',inset:'0',width:'100%',height:'100%',pointerEvents:'none'});this.host.append(this.leaders);
       for(const entry of entries){
         if(entry.label.structureId==='body')continue;
@@ -162,41 +297,49 @@ export class AnatomyScene {
   }
   clear(){
     cancelAnimationFrame(this.frame);this.frame=null;
+    const extraMaterials=this.entries.flatMap(entry=>[...entry.surfaceMaterials,...(entry.silhouetteMaterial?[entry.silhouetteMaterial]:[])]);
     for(const entry of this.entries)entry.button?.remove();this.entries=[];
     this.leaders?.remove();this.leaders=null;
-    if(this.root){this.scene.remove(this.root);disposeObject(this.root);this.root=null;}
+    if(this.root){this.scene.remove(this.root);disposeObject(this.root,extraMaterials);this.root=null;}
+    if(this.compass)this.compass.hidden=true;if(this.scaleGuide)this.scaleGuide.hidden=true;
     delete this.host.dataset.anatomyAssetId;
   }
   focus(id){if(id!==null&&!this.entries.some(entry=>entry.label.structureId===id))return;this.selected=id;this.applyView();}
   setLayer(layer){if(!['body','regional','organ'].includes(layer))return;this.layer=layer;this.applyView();}
   setContextVisible(visible){this.contextVisible=!!visible;this.applyView();}
+  setRelevantStructures(ids){this.relevant=new Set(Array.isArray(ids)?ids:[]);this.applyView();}
   setManual(enabled){this.manual=!!enabled;if(this.controls)this.controls.enabled=this.manual;if(!enabled)this.applyView();}
   setActive(active){this.active=!!active;cancelAnimationFrame(this.frame);this.frame=null;if(this.active&&!this.failed&&!this.destroyed&&this.root){this.last=performance.now();this.frame=requestAnimationFrame(this.draw);}}
   applyView(snap=false){
     if(!this.root)return;
-    const selected=this.entries.find(entry=>entry.label.structureId===this.selected),bounds=new THREE.Box3();
-    const center=selected?.bounds.getCenter(new THREE.Vector3());
-    const radius=selected?Math.max(selected.bounds.getSize(new THREE.Vector3()).length()*1.8,0.16):0;
+    const plan=planAnatomyView(this.entries.map(entry=>entry.label),this.selected,this.layer,this.contextVisible,[...this.relevant]),bounds=new THREE.Box3();
+    this.host.dataset.anatomyLayer=plan.layer;
     for(const entry of this.entries){
-      const isSelected=entry===selected,context=!!entry.label.context;
-      let visible=isSelected||!context||this.contextVisible;
-      if(selected&&this.layer==='organ')visible=isSelected;
-      if(selected&&this.layer==='regional')visible=visible&&(isSelected||entry.bounds.distanceToPoint(center)<=radius);
-      entry.mesh.visible=visible;entry.mesh.material.emissiveIntensity=isSelected?0.3:0.02;
-      if(context)entry.mesh.material.opacity=isSelected?0.88:entry.label.structureId==='body'?0.07:0.2;
+      const state=plan.entries.find(item=>item.id===entry.label.structureId),isSelected=state.selected;
+      entry.mesh.visible=state.visible;
+      entry.mesh.material=state.silhouette&&entry.silhouetteMaterial?entry.silhouetteMaterial:entry.surfaceMaterials.length===1?entry.surfaceMaterials[0]:entry.surfaceMaterials;
+      const translucent=entry.label.context&&!isSelected;
+      entry.surfaceMaterials.forEach((material,index)=>{
+        const base=entry.baseAppearance[index],oldTransparent=material.transparent;
+        material.color.copy(base.color);if(isSelected&&!material.map)material.color.lerp(new THREE.Color('#f6e5cc'),.045);
+        material.opacity=translucent?Math.min(base.opacity,plan.layer==='body'?.2:.27):base.opacity;
+        material.transparent=translucent||base.transparent;material.depthWrite=translucent?false:base.depthWrite;
+        if(oldTransparent!==material.transparent)material.needsUpdate=true;
+      });
+      entry.mesh.renderOrder=state.silhouette?2:translucent?1:0;
       entry.button?.classList.toggle('selected',isSelected);entry.button?.setAttribute('aria-pressed',String(isSelected));
       entry.leader?.classList.toggle('selected',isSelected);entry.anchorDot?.classList.toggle('selected',isSelected);
-      if(entry.button)entry.button.hidden=!visible||(context&&!isSelected);
-      // Whole-body context stays translucent in regional views but does not force a full-body zoom.
-      if(visible&&!(selected&&this.layer==='regional'&&context&&!isSelected))bounds.union(entry.bounds);
+      if(entry.button)entry.button.hidden=!state.labelVisible;
+      if(state.frame||(plan.layer==='body'&&entry.label.structureId==='body'))bounds.union(entry.bounds);
     }
+    // Independent organ packs have no body shell; all their visible meshes still frame normally.
+    if(bounds.isEmpty())for(const entry of this.entries)if(entry.mesh.visible)bounds.union(entry.bounds);
     if(bounds.isEmpty())return;
-    if(selected&&this.layer==='regional')bounds.expandByScalar(Math.max(radius*0.18,0.04));
     this.viewBounds=bounds;
     const width=this.host.clientWidth,height=this.host.clientHeight;
-    const framingAspect=width&&height?Math.max(width*.3,width-2*(labelColumnWidth(width)+28))/height:this.camera.aspect;
-    const frame=fitAnatomyBounds(bounds.min.toArray(),bounds.max.toArray(),framingAspect);
-    this.target.fromArray(frame.target);this.eye.copy(this.target).add(new THREE.Vector3(0,0,frame.distance));
+    const framingAspect=width&&height?Math.max(width*.3,width-2*(labelColumnWidth(width)+22))/height:this.camera.aspect;
+    const frame=fitAnatomyCamera(bounds.min.toArray(),bounds.max.toArray(),framingAspect,{direction:anatomyCameraDirection(plan.region,plan.layer,this.selected,this.directions),up:this.directions?.superior??[0,1,0],fov:this.camera.fov,padding:plan.layer==='body'?1.14:1.18});
+    this.target.fromArray(frame.target);this.eye.fromArray(frame.position);
     this.camera.near=Math.max(frame.distance/5000,0.0001);this.camera.far=Math.max(frame.distance*12,10);this.camera.updateProjectionMatrix();
     this.controls.minDistance=Math.max(frame.distance*.14,0.01);this.controls.maxDistance=Math.max(frame.distance*5,3);
     if(snap||this.reduced){this.camera.position.copy(this.eye);this.controls.target.copy(this.target);this.camera.lookAt(this.target);}
@@ -217,6 +360,7 @@ export class AnatomyScene {
     const dt=Math.min((now-this.last)/1000,.1);this.last=now;
     if(this.manual)this.controls.update();else{const ease=this.reduced?1:1-Math.exp(-dt*5);this.camera.position.lerp(this.eye,ease);this.controls.target.lerp(this.target,ease);this.camera.lookAt(this.controls.target);}
     this.camera.updateMatrixWorld();
+    this.updateMeasurementGuides();
     const width=this.host.clientWidth,height=this.host.clientHeight,points=[];
     this.leaders.setAttribute('viewBox',`0 0 ${width} ${height}`);
     for(const entry of this.entries){
@@ -236,6 +380,7 @@ export class AnatomyScene {
   }
   destroy(){
     this.destroyed=true;this.loadVersion++;this.abort?.abort();cancelAnimationFrame(this.frame);this.resizeObserver?.disconnect();this.controls?.dispose();this.clear();
+    this.compass?.remove();this.scaleGuide?.remove();this.environment?.dispose();
     if(this.renderer){const canvas=this.renderer.domElement;canvas.removeEventListener('pointerdown',this.pointerDown);canvas.removeEventListener('pointerup',this.pointerUp);canvas.removeEventListener('webglcontextlost',this.contextLost);this.renderer.dispose();canvas.remove();}
   }
 }

@@ -1,0 +1,349 @@
+{
+  "assetId": "hra-pancreas-detail",
+  "version": "0.4.0",
+  "system": "glucose",
+  "representation": "anatomical",
+  "source": {
+    "origin": "HRA 3D Reference Organ for Pancreas, Male v1.2; Visible Human Male source. NIH 3DPX-021013 version 1.",
+    "license": "CC-BY-4.0",
+    "attribution": "Kristen Browne; Heidi Schlehlein. 2023. 3D Reference Organ for Pancreas, Male v1.2. https://doi.org/10.48539/HBM368.XMJZ.722. Human Reference Atlas; CC BY 4.0.",
+    "creationMethod": "model-file",
+    "sourceUrl": "https://cdn.humanatlas.io/digital-objects/ref-organ/pancreas-male/v1.2/assets/3d-vh-m-pancreas.glb",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sha256": "6fc5de9825c2ce8449b5bd5c0751d6b754bca4aa1c63ea2353dd09efa5c44a15",
+    "referenceSpaceId": "hra-vh-male-pancreas-v1.2",
+    "referenceSpaceDescription": "Independent native HRA organ coordinates. No registration or overlay with BodyParts3D; no anatomical-direction declaration.",
+    "entryUrl": "https://3d.nih.gov/entries/21013?version=1",
+    "canonicalUrl": "https://purl.humanatlas.io/ref-organ/pancreas-male/v1.2",
+    "citationDoi": "https://doi.org/10.48539/HBM368.XMJZ.722",
+    "licenseEvidenceUri": "./hra-source-evidence.json",
+    "licenseUri": "./CC-BY-4.0.txt",
+    "sourceCrosswalkUri": "./hra-pancreas-crosswalk.csv",
+    "transform": {
+      "formula": "[X,Y,Z]=[x,y,z] (identity)",
+      "matrixOrder": "row-major",
+      "matrix": [
+        [
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "coordinateReferenceUrl": "https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#coordinate-system-and-units",
+      "description": "Native glTF metres verified against official HRA per-region millimetre dimensions; Y up and right handed by format specification. Every source node has identity transform. No translation, rotation, scaling, inferred anatomical orientation or cross-dataset registration."
+    },
+    "modifications": "Rename five mesh/node IDs for application binding and add attribution; retain complete source binary chunk, normals, original PBR material, hierarchy and coordinates. No added detail, smoothing, decimation, textures or shape edits.",
+    "coverageNotes": [
+      "Five macroscopic regions: head, neck, body, tail and uncinate process.",
+      "Source regions contain open boundaries; the head has 12 non-manifold edges after exact-position virtual welding. Geometry is preserved, not repaired; suitable for visual reference rather than watertight fabrication.",
+      "No pancreatic ducts, vessels, islets or cell-level structures are identifiable named meshes in this asset.",
+      "No texture images or UV attributes are supplied; surface shading is the original uniform gland material.",
+      "Native HRA organ reference is not registered to BodyParts3D; never show their relative alignment as anatomical evidence."
+    ],
+    "coordinateEvidenceUri": "./hra-coordinate-evidence.json"
+  },
+  "review": {
+    "status": "draft",
+    "scope": "anatomy"
+  },
+  "coordinates": {
+    "unit": "m",
+    "upAxis": "Y",
+    "handedness": "right"
+  },
+  "lods": [
+    {
+      "level": 0,
+      "uri": "./hra-pancreas-detail.glb",
+      "triangleCount": 38930,
+      "byteLength": 2110224,
+      "sha256": "f8b33cecaf735badcccf6ea6eaa397b3f81d78c28f861b1886883c684da58a6b"
+    }
+  ],
+  "labels": [
+    {
+      "structureId": "pancreas-body",
+      "meshName": "pancreas-body",
+      "name": "胰体",
+      "parentId": null,
+      "anchor": [
+        0.019810742465779185,
+        0.35043594241142273,
+        0.02615565457381308
+      ],
+      "bounds": {
+        "min": [
+          -0.005377060268074274,
+          0.3313713073730469,
+          0.0033818078227341175
+        ],
+        "max": [
+          0.044998545199632645,
+          0.3695005774497986,
+          0.048929501324892044
+        ]
+      },
+      "moduleIds": [
+        "glucose"
+      ],
+      "context": false,
+      "color": "#dec494",
+      "sourceIds": [
+        "UBERON:0001150"
+      ],
+      "sourceMeshName": "VH_M_body_of_pancreas",
+      "region": "pancreas-detail"
+    },
+    {
+      "structureId": "pancreas-tail",
+      "meshName": "pancreas-tail",
+      "name": "胰尾",
+      "parentId": null,
+      "anchor": [
+        0.05102042481303215,
+        0.3580738753080368,
+        -0.007657219655811787
+      ],
+      "bounds": {
+        "min": [
+          0.02470008283853531,
+          0.34054893255233765,
+          -0.032517220824956894
+        ],
+        "max": [
+          0.07734076678752899,
+          0.37559881806373596,
+          0.01720278151333332
+        ]
+      },
+      "moduleIds": [
+        "glucose"
+      ],
+      "context": false,
+      "color": "#dec494",
+      "sourceIds": [
+        "UBERON:0001151"
+      ],
+      "sourceMeshName": "VH_M_tail_of_pancreas",
+      "region": "pancreas-detail"
+    },
+    {
+      "structureId": "pancreas-head",
+      "meshName": "pancreas-head",
+      "name": "胰头",
+      "parentId": null,
+      "anchor": [
+        -0.012846530880779028,
+        0.33013850450515747,
+        0.02975286403670907
+      ],
+      "bounds": {
+        "min": [
+          -0.03409314528107643,
+          0.3063303232192993,
+          0.008407735265791416
+        ],
+        "max": [
+          0.008400083519518375,
+          0.3539466857910156,
+          0.051097992807626724
+        ]
+      },
+      "moduleIds": [
+        "glucose"
+      ],
+      "context": false,
+      "color": "#dec494",
+      "sourceIds": [
+        "UBERON:0001069"
+      ],
+      "sourceMeshName": "VH_M_head_of_pancreas",
+      "region": "pancreas-detail"
+    },
+    {
+      "structureId": "pancreas-neck",
+      "meshName": "pancreas-neck",
+      "name": "胰颈",
+      "parentId": null,
+      "anchor": [
+        -0.003693633945658803,
+        0.34343384206295013,
+        0.03770207520574331
+      ],
+      "bounds": {
+        "min": [
+          -0.013479459099471569,
+          0.32924118638038635,
+          0.024361373856663704
+        ],
+        "max": [
+          0.006092191208153963,
+          0.3576264977455139,
+          0.05104277655482292
+        ]
+      },
+      "moduleIds": [
+        "glucose"
+      ],
+      "context": false,
+      "color": "#dec494",
+      "sourceIds": [
+        "FMA:14517"
+      ],
+      "sourceMeshName": "VH_M_neck_of_pancreas",
+      "region": "pancreas-detail"
+    },
+    {
+      "structureId": "pancreas-uncinate",
+      "meshName": "pancreas-uncinate",
+      "name": "胰腺钩突",
+      "parentId": null,
+      "anchor": [
+        -0.011742194532416761,
+        0.3125356584787369,
+        0.0256399386562407
+      ],
+      "bounds": {
+        "min": [
+          -0.027376892045140266,
+          0.3035867214202881,
+          0.008770608343183994
+        ],
+        "max": [
+          0.0038925029803067446,
+          0.32148459553718567,
+          0.04250926896929741
+        ]
+      },
+      "moduleIds": [
+        "glucose"
+      ],
+      "context": false,
+      "color": "#dec494",
+      "sourceIds": [
+        "UBERON:0010373"
+      ],
+      "sourceMeshName": "VH_M_uncinate_process_of_the_pancreas",
+      "region": "pancreas-detail"
+    }
+  ],
+  "materials": [
+    {
+      "slot": "Gland_Mat",
+      "preset": "anatomicalSurface",
+      "color": "#dec494",
+      "structureIds": [
+        "pancreas-body",
+        "pancreas-tail",
+        "pancreas-head",
+        "pancreas-neck",
+        "pancreas-uncinate"
+      ]
+    }
+  ],
+  "cameraAnchors": [
+    {
+      "id": "overview",
+      "structureId": null,
+      "position": [
+        0.02162381075322628,
+        0.339592769742012,
+        0.2544449925422669
+      ],
+      "target": [
+        0.02162381075322628,
+        0.339592769742012,
+        0.009290385991334915
+      ]
+    },
+    {
+      "id": "focus-pancreas-body",
+      "structureId": "pancreas-body",
+      "position": [
+        0.019810742465779185,
+        0.35043594241142273,
+        0.1369819866027683
+      ],
+      "target": [
+        0.019810742465779185,
+        0.35043594241142273,
+        0.02615565457381308
+      ]
+    },
+    {
+      "id": "focus-pancreas-tail",
+      "structureId": "pancreas-tail",
+      "position": [
+        0.05102042481303215,
+        0.3580738753080368,
+        0.10815228503197433
+      ],
+      "target": [
+        0.05102042481303215,
+        0.3580738753080368,
+        -0.007657219655811787
+      ]
+    },
+    {
+      "id": "focus-pancreas-head",
+      "structureId": "pancreas-head",
+      "position": [
+        -0.012846530880779028,
+        0.33013850450515747,
+        0.13450886169448495
+      ],
+      "target": [
+        -0.012846530880779028,
+        0.33013850450515747,
+        0.02975286403670907
+      ]
+    },
+    {
+      "id": "focus-pancreas-neck",
+      "structureId": "pancreas-neck",
+      "position": [
+        -0.003693633945658803,
+        0.34343384206295013,
+        0.1277020752057433
+      ],
+      "target": [
+        -0.003693633945658803,
+        0.34343384206295013,
+        0.03770207520574331
+      ]
+    },
+    {
+      "id": "focus-pancreas-uncinate",
+      "structureId": "pancreas-uncinate",
+      "position": [
+        -0.011742194532416761,
+        0.3125356584787369,
+        0.1156399386562407
+      ],
+      "target": [
+        -0.011742194532416761,
+        0.3125356584787369,
+        0.0256399386562407
+      ]
+    }
+  ]
+}

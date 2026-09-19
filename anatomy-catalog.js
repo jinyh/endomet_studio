@@ -33,8 +33,9 @@ export function validateAnatomyManifest(manifest){
   return manifest;
 }
 
-export async function loadAnatomyManifest({fetchImpl=globalThis.fetch}={}){
-  const url=new URL(anatomyManifestPath,import.meta.url);
+export async function loadAnatomyManifest({fetchImpl=globalThis.fetch,assetKey}={}){
+  if(assetKey!==undefined&&!Object.hasOwn(anatomyPacks,assetKey))throw new Error('未知参考图谱');
+  const url=new URL(assetKey?anatomyPacks[assetKey].path:anatomyManifestPath,import.meta.url);
   const response=await fetchImpl(url);
   if(!response.ok)throw new Error('解剖资源暂时无法加载，请重试；机制实验仍可使用。');
   return {manifest:validateAnatomyManifest(await response.json()),url};
@@ -54,4 +55,31 @@ export function validateAnatomyCommand(command,manifest){
   if(command.type==='layer'&&['body','regional','organ'].includes(command.layer))return {type:'layer',layer:command.layer};
   if(['context','manual'].includes(command.type)&&typeof command.enabled==='boolean')return {type:command.type,enabled:command.enabled};
   throw new Error('不支持的解剖操作');
+}
+
+export const anatomyPacks=Object.freeze({
+  overview:{path:'./assets/anatomy/bodyparts3d-overview.json',name:'BodyParts3D · 全身参考'},
+  reference:{path:'./assets/anatomy/bodyparts3d-endocrine.json',name:'BodyParts3D · 原始精度'},
+  hra:{path:'./assets/anatomy/hra-pancreas-detail.json',name:'HRA · 胰腺分区参考'},
+});
+const primary={glucose:'pancreas',thyroid:'thyroid',adrenal:'adrenal-left',gonadal:'testis-left',calcium:'parathyroid',energy:'adipose'};
+const mapping={
+  glucose:{gut:['stomach','duodenum'],glucose:[],beta:[],insulin:[],muscle:[],liver:['liver']},
+  thyroid:{hypothalamus:['hypothalamus'],pituitary:['pituitary'],thyroid:['thyroid'],tissue:[]},
+  adrenal:{hypothalamus:['hypothalamus'],pituitary:['pituitary'],adrenal:['adrenal-left','adrenal-right'],stress:[],tissue:[]},
+  gonadal:{hypothalamus:['hypothalamus'],pituitary:['pituitary'],gonad:['testis-left','testis-right'],tissue:[]},
+  calcium:{calcium:[],parathyroid:['parathyroid'],bone:[],kidney:['kidney-left','kidney-right']},
+  energy:{intake:[],brain:['hypothalamus'],adipose:[],signal:[],expenditure:[]},
+};
+export function mechanismAnatomyTarget(manifest,moduleId,nodeId=null){
+  const module=modules.find(m=>m.id===moduleId);if(!module)throw new Error('未知课程系统');
+  const node=nodeId===null?null:module.nodes.find(n=>n[0]===nodeId);if(nodeId!==null&&!node)throw new Error('未知机制节点');
+  const requested=nodeId===null?[primary[moduleId]]:mapping[moduleId][nodeId];
+  const structureIds=requested.filter(id=>manifest.labels.some(label=>label.structureId===id));
+  const label=node?.[1]??{glucose:'胰腺',thyroid:'甲状腺',adrenal:'肾上腺',gonadal:'睾丸',calcium:'甲状旁腺',energy:'脂肪组织'}[moduleId];
+  let note=structureIds.length?'':`${label}没有对应的已接入网格。可从相关结构列表选择参照，当前保持全身概览。`;
+  if(nodeId==='beta')note='胰岛 β 细胞属于微观层级，当前未接入。胰腺实质可作为器官位置参照，不能代替细胞结构。';
+  if(moduleId==='adrenal'&&nodeId==='adrenal'&&structureIds.length)note='当前定位肾上腺整体；皮质与髓质尚未分层。';
+  if(moduleId==='energy'&&nodeId==='brain'&&structureIds.length)note='下丘脑用于中枢食欲调节的位置参照，不代表完整食欲调节网络。';
+  return {structureIds,selected:structureIds[0]??null,note};
 }
