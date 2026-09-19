@@ -1,0 +1,303 @@
+{
+  "assetId": "glucose-mechanism-schematic",
+  "version": "0.2.0",
+  "system": "glucose",
+  "representation": "schematic",
+  "source": {
+    "origin": "EndoMet Studio 自建程序机制示意；标签与坐标来自 dist/data.js",
+    "license": "LicenseRef-EndoMet-Project-Internal: 项目自建，许可本项目内部教学与研发使用；未授予第三方再分发许可",
+    "attribution": "EndoMet Studio 项目；无外部模型或纹理",
+    "creationMethod": "procedural"
+  },
+  "review": {
+    "status": "draft",
+    "scope": "mechanism-illustration"
+  },
+  "coordinates": {
+    "unit": "schematic",
+    "upAxis": "Y",
+    "handedness": "right"
+  },
+  "lods": [],
+  "labels": [
+    {
+      "structureId": "gut",
+      "name": "消化道",
+      "parentId": null,
+      "anchor": [
+        -3.4,
+        1.6,
+        0
+      ]
+    },
+    {
+      "structureId": "glucose",
+      "name": "血液葡萄糖",
+      "parentId": null,
+      "anchor": [
+        0,
+        1.8,
+        0
+      ]
+    },
+    {
+      "structureId": "beta",
+      "name": "胰岛 β 细胞",
+      "parentId": null,
+      "anchor": [
+        3.4,
+        1.2,
+        0
+      ]
+    },
+    {
+      "structureId": "insulin",
+      "name": "胰岛素",
+      "parentId": null,
+      "anchor": [
+        2.5,
+        -1.5,
+        0.3
+      ]
+    },
+    {
+      "structureId": "muscle",
+      "name": "肌肉与脂肪",
+      "parentId": null,
+      "anchor": [
+        -0.7,
+        -2,
+        0
+      ]
+    },
+    {
+      "structureId": "liver",
+      "name": "肝脏",
+      "parentId": null,
+      "anchor": [
+        -3.5,
+        -1.2,
+        0
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "slot": "signal",
+      "preset": "signal",
+      "color": "#55d5c5",
+      "structureIds": [
+        "glucose",
+        "insulin"
+      ]
+    },
+    {
+      "slot": "tissueSchematic",
+      "preset": "tissueSchematic",
+      "color": "#55d5c5",
+      "structureIds": [
+        "gut",
+        "beta",
+        "muscle",
+        "liver"
+      ]
+    }
+  ],
+  "cameraAnchors": [
+    {
+      "id": "overview",
+      "structureId": null,
+      "position": [
+        0,
+        0.2,
+        11.4
+      ],
+      "target": [
+        0,
+        -0.1,
+        0
+      ]
+    },
+    {
+      "id": "focus-gut",
+      "structureId": "gut",
+      "position": [
+        -1.36,
+        0.9400000000000002,
+        8.6
+      ],
+      "target": [
+        -1.36,
+        0.6400000000000001,
+        0
+      ]
+    },
+    {
+      "id": "focus-glucose",
+      "structureId": "glucose",
+      "position": [
+        0,
+        1.02,
+        8.6
+      ],
+      "target": [
+        0,
+        0.7200000000000001,
+        0
+      ]
+    },
+    {
+      "id": "focus-beta",
+      "structureId": "beta",
+      "position": [
+        1.36,
+        0.78,
+        8.6
+      ],
+      "target": [
+        1.36,
+        0.48,
+        0
+      ]
+    },
+    {
+      "id": "focus-insulin",
+      "structureId": "insulin",
+      "position": [
+        1,
+        -0.3000000000000001,
+        8.719999999999999
+      ],
+      "target": [
+        1,
+        -0.6000000000000001,
+        0.12
+      ]
+    },
+    {
+      "id": "focus-muscle",
+      "structureId": "muscle",
+      "position": [
+        -0.27999999999999997,
+        -0.5,
+        8.6
+      ],
+      "target": [
+        -0.27999999999999997,
+        -0.8,
+        0
+      ]
+    },
+    {
+      "id": "focus-liver",
+      "structureId": "liver",
+      "position": [
+        -1.4000000000000001,
+        -0.18,
+        8.6
+      ],
+      "target": [
+        -1.4000000000000001,
+        -0.48,
+        0
+      ]
+    }
+  ],
+  "geometry": {
+    "kind": "procedural-mechanism",
+    "description": "程序生成的机制节点与反馈连线。坐标仅用于教学布局，不表示真实器官形态、尺寸或解剖位置；不含 GLB，不构成医学审核。",
+    "nodes": [
+      {
+        "structureId": "gut",
+        "primitive": "icosahedron",
+        "radius": 0.32,
+        "detail": 3,
+        "materialSlot": "tissueSchematic",
+        "metricKey": "g"
+      },
+      {
+        "structureId": "glucose",
+        "primitive": "icosahedron",
+        "radius": 0.32,
+        "detail": 3,
+        "materialSlot": "signal",
+        "metricKey": "g"
+      },
+      {
+        "structureId": "beta",
+        "primitive": "icosahedron",
+        "radius": 0.32,
+        "detail": 3,
+        "materialSlot": "tissueSchematic",
+        "metricKey": "i"
+      },
+      {
+        "structureId": "insulin",
+        "primitive": "icosahedron",
+        "radius": 0.32,
+        "detail": 3,
+        "materialSlot": "signal",
+        "metricKey": "i"
+      },
+      {
+        "structureId": "muscle",
+        "primitive": "icosahedron",
+        "radius": 0.32,
+        "detail": 3,
+        "materialSlot": "tissueSchematic",
+        "metricKey": "u"
+      },
+      {
+        "structureId": "liver",
+        "primitive": "icosahedron",
+        "radius": 0.32,
+        "detail": 3,
+        "materialSlot": "tissueSchematic",
+        "metricKey": "h"
+      }
+    ],
+    "edges": [
+      {
+        "from": "gut",
+        "to": "glucose",
+        "sign": "+"
+      },
+      {
+        "from": "glucose",
+        "to": "beta",
+        "sign": "+"
+      },
+      {
+        "from": "beta",
+        "to": "insulin",
+        "sign": "+"
+      },
+      {
+        "from": "insulin",
+        "to": "muscle",
+        "sign": "+"
+      },
+      {
+        "from": "muscle",
+        "to": "glucose",
+        "sign": "−"
+      },
+      {
+        "from": "insulin",
+        "to": "liver",
+        "sign": "−"
+      },
+      {
+        "from": "liver",
+        "to": "glucose",
+        "sign": "+"
+      }
+    ]
+  },
+  "highlight": {
+    "selectionEmissive": 0.55,
+    "baselineEmissive": 0.12,
+    "activityGain": 0.12,
+    "ringScale": 1.25
+  }
+}

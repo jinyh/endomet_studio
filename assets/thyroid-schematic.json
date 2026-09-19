@@ -1,0 +1,220 @@
+{
+  "assetId": "thyroid-mechanism-schematic",
+  "version": "0.2.0",
+  "system": "thyroid",
+  "representation": "schematic",
+  "source": {
+    "origin": "EndoMet Studio 自建程序机制示意；标签与坐标来自 dist/data.js",
+    "license": "LicenseRef-EndoMet-Project-Internal: 项目自建，许可本项目内部教学与研发使用；未授予第三方再分发许可",
+    "attribution": "EndoMet Studio 项目；无外部模型或纹理",
+    "creationMethod": "procedural"
+  },
+  "review": {
+    "status": "draft",
+    "scope": "mechanism-illustration"
+  },
+  "coordinates": {
+    "unit": "schematic",
+    "upAxis": "Y",
+    "handedness": "right"
+  },
+  "lods": [],
+  "labels": [
+    {
+      "structureId": "hypothalamus",
+      "name": "下丘脑",
+      "parentId": null,
+      "anchor": [
+        0,
+        2.4,
+        0
+      ]
+    },
+    {
+      "structureId": "pituitary",
+      "name": "垂体",
+      "parentId": null,
+      "anchor": [
+        0,
+        0.3,
+        0
+      ]
+    },
+    {
+      "structureId": "thyroid",
+      "name": "甲状腺",
+      "parentId": null,
+      "anchor": [
+        0,
+        -2,
+        0
+      ]
+    },
+    {
+      "structureId": "tissue",
+      "name": "靶组织",
+      "parentId": null,
+      "anchor": [
+        3.6,
+        -1.5,
+        0
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "slot": "tissueSchematic",
+      "preset": "tissueSchematic",
+      "color": "#b998f4",
+      "structureIds": [
+        "hypothalamus",
+        "pituitary",
+        "thyroid",
+        "tissue"
+      ]
+    }
+  ],
+  "cameraAnchors": [
+    {
+      "id": "overview",
+      "structureId": null,
+      "position": [
+        0,
+        0.2,
+        11.4
+      ],
+      "target": [
+        0,
+        -0.1,
+        0
+      ]
+    },
+    {
+      "id": "focus-hypothalamus",
+      "structureId": "hypothalamus",
+      "position": [
+        0,
+        1.26,
+        8.6
+      ],
+      "target": [
+        0,
+        0.96,
+        0
+      ]
+    },
+    {
+      "id": "focus-pituitary",
+      "structureId": "pituitary",
+      "position": [
+        0,
+        0.42,
+        8.6
+      ],
+      "target": [
+        0,
+        0.12,
+        0
+      ]
+    },
+    {
+      "id": "focus-thyroid",
+      "structureId": "thyroid",
+      "position": [
+        0,
+        -0.5,
+        8.6
+      ],
+      "target": [
+        0,
+        -0.8,
+        0
+      ]
+    },
+    {
+      "id": "focus-tissue",
+      "structureId": "tissue",
+      "position": [
+        1.4400000000000002,
+        -0.3000000000000001,
+        8.6
+      ],
+      "target": [
+        1.4400000000000002,
+        -0.6000000000000001,
+        0
+      ]
+    }
+  ],
+  "geometry": {
+    "kind": "procedural-mechanism",
+    "description": "程序生成的机制节点与反馈连线。坐标仅用于教学布局，不表示真实器官形态、尺寸或解剖位置；不含 GLB，不构成医学审核。",
+    "nodes": [
+      {
+        "structureId": "hypothalamus",
+        "primitive": "icosahedron",
+        "radius": 0.32,
+        "detail": 3,
+        "materialSlot": "tissueSchematic",
+        "metricKey": "h"
+      },
+      {
+        "structureId": "pituitary",
+        "primitive": "icosahedron",
+        "radius": 0.32,
+        "detail": 3,
+        "materialSlot": "tissueSchematic",
+        "metricKey": "p"
+      },
+      {
+        "structureId": "thyroid",
+        "primitive": "icosahedron",
+        "radius": 0.32,
+        "detail": 3,
+        "materialSlot": "tissueSchematic",
+        "metricKey": "g"
+      },
+      {
+        "structureId": "tissue",
+        "primitive": "icosahedron",
+        "radius": 0.32,
+        "detail": 3,
+        "materialSlot": "tissueSchematic",
+        "metricKey": "g"
+      }
+    ],
+    "edges": [
+      {
+        "from": "hypothalamus",
+        "to": "pituitary",
+        "sign": "+"
+      },
+      {
+        "from": "pituitary",
+        "to": "thyroid",
+        "sign": "+"
+      },
+      {
+        "from": "thyroid",
+        "to": "hypothalamus",
+        "sign": "−"
+      },
+      {
+        "from": "thyroid",
+        "to": "pituitary",
+        "sign": "−"
+      },
+      {
+        "from": "thyroid",
+        "to": "tissue",
+        "sign": "+"
+      }
+    ]
+  },
+  "highlight": {
+    "selectionEmissive": 0.55,
+    "baselineEmissive": 0.12,
+    "activityGain": 0.12,
+    "ringScale": 1.25
+  }
+}

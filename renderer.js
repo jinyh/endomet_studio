@@ -30,15 +30,19 @@ export class MechanismScene {
     this.group.traverse(o=>{o.geometry?.dispose();if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose());}});
     this.group.clear();this.nodes=[];this.edges=[];
   }
-  setModule(m){
-    if(this.failed)return;this.clear();this.module=m;const color=new THREE.Color(m.color);
-    m.nodes.forEach(([id,label,x,y,z,key],index)=>{
-      const sphere=new THREE.Mesh(new THREE.IcosahedronGeometry(0.32,3),new THREE.MeshStandardMaterial({...materialPresets.signal,color,emissive:color,emissiveIntensity:0.12}));sphere.position.set(x,y,z);this.group.add(sphere);
+  setModule(m,asset=null){
+    if(this.failed)return;this.clear();this.module=m;this.asset=asset;this.host.dataset.assetId=asset?.manifest.assetId??'builtin';const color=new THREE.Color(m.color);
+    this.highlight=asset?.highlight??{selectionEmissive:0.55,baselineEmissive:0.12,activityGain:0.12,ringScale:1.25};
+    (asset?.nodes??m.nodes).forEach(([id,label,x,y,z,key],index)=>{
+      const geometry=asset?.geometry.nodes.find(n=>n.structureId===id);
+      const material=asset?.materials.find(item=>item.slot===geometry?.materialSlot);
+      const nodeColor=material?.color?new THREE.Color(material.color):color;
+      const sphere=new THREE.Mesh(new THREE.IcosahedronGeometry(geometry?.radius??0.32,geometry?.detail??3),new THREE.MeshStandardMaterial({...materialPresets[material?.preset??'signal'],color:nodeColor,emissive:nodeColor,emissiveIntensity:this.highlight.baselineEmissive}));sphere.position.set(x,y,z);this.group.add(sphere);
       const ring=new THREE.Mesh(new THREE.TorusGeometry(0.52,0.013,8,64),new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.35}));ring.position.copy(sphere.position);this.group.add(ring);
       const halo=new THREE.Mesh(new THREE.SphereGeometry(0.45,20,12),new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.045,depthWrite:false}));halo.position.copy(sphere.position);this.group.add(halo);
-      const button=document.createElement('button');button.className='node-label';button.dataset.node=id;button.innerHTML=`<span class="node-index">${String(index+1).padStart(2,'0')}</span><strong>${label}</strong><span class="node-reading"></span>`;button.addEventListener('click',()=>this.onSelect(id));this.host.append(button);this.labels.push(button);this.nodes.push({id,sphere,ring,halo,key,button});
+      const button=document.createElement('button');button.className='node-label';button.dataset.node=id;const number=document.createElement('span');number.className='node-index';number.textContent=String(index+1).padStart(2,'0');const name=document.createElement('strong');name.textContent=label;const reading=document.createElement('span');reading.className='node-reading';button.append(number,name,reading);button.addEventListener('click',()=>this.onSelect(id));this.host.append(button);this.labels.push(button);this.nodes.push({id,sphere,ring,halo,key,button});
     });
-    m.edges.forEach(([from,to,sign],index)=>{
+    (asset?.edges??m.edges).forEach(([from,to,sign],index)=>{
       const a=this.nodes.find(n=>n.id===from).sphere.position,b=this.nodes.find(n=>n.id===to).sphere.position;
       const mid=a.clone().lerp(b,0.5);mid.z=sign==='−'?-0.7:0.25;mid.x+=(index%2?0.24:-0.24);
       const curve=new THREE.QuadraticBezierCurve3(a,mid,b);
@@ -56,6 +60,8 @@ export class MechanismScene {
     if(this.failed)return;this.selected=id;const n=this.nodes.find(n=>n.id===id);
     const desired=n?n.sphere.position.clone().multiplyScalar(0.4):new THREE.Vector3(0,-0.1,0);
     this.target.copy(desired);this.eye.copy(desired).add(new THREE.Vector3(0,0.3,n?8.6:11.4));
+    const anchor=this.asset?.cameraAnchors.find(a=>a.structureId===id);
+    if(anchor){this.target.fromArray(anchor.target);this.eye.fromArray(anchor.position);}
     for(const node of this.nodes)node.button.classList.toggle('selected',node.id===id);
   }
   draw(now){
@@ -64,8 +70,8 @@ export class MechanismScene {
     if(!this.manual){const ease=this.reduced?1:1-Math.exp(-dt*5);this.camera.position.lerp(this.eye,ease);this.controls.target.lerp(this.target,ease);this.camera.lookAt(this.controls.target);}else this.controls.update();
     const w=this.host.clientWidth,h=this.host.clientHeight;
     for(const n of this.nodes){
-      const v=this.value[n.key]??1;n.sphere.scale.setScalar(0.86+Math.min(v,3)*0.14);n.sphere.material.emissiveIntensity=(n.id===this.selected?0.55:0.12)+Math.max(0,v-1)*0.12;
-      n.ring.scale.setScalar(n.id===this.selected?1.25:1);
+      const v=this.value[n.key]??1;n.sphere.scale.setScalar(0.86+Math.min(v,3)*0.14);n.sphere.material.emissiveIntensity=(n.id===this.selected?this.highlight.selectionEmissive:this.highlight.baselineEmissive)+Math.max(0,v-1)*this.highlight.activityGain;
+      n.ring.scale.setScalar(n.id===this.selected?this.highlight.ringScale:1);
       const p=n.sphere.position.clone().project(this.camera);n.button.style.left=`${(p.x/2+0.5)*w}px`;n.button.style.top=`${(-p.y/2+0.5)*h+30}px`;n.button.style.visibility=p.z>1?'hidden':'visible';
       const qualitative=['gut','beta','tissue','stress','kidney','brain'].includes(n.id);
       n.button.querySelector('.node-reading').textContent=qualitative?'':`${v.toFixed(2)} ×`;

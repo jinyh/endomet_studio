@@ -1,5 +1,5 @@
 // Educational, dimensionless mechanisms. Parameters have not been fitted to patients.
-export const MODEL_VERSION='teaching-0.1.0';
+export const MODEL_VERSION='teaching-0.2.0';
 const clamp=(v,min=0.02,max=8)=>Math.min(max,Math.max(min,v));
 export function parameters(module, scenarioId, intervention=false) {
   const scenario=module.scenarios.find(s=>s.id===scenarioId);
@@ -42,15 +42,18 @@ export function simulate(m,scenarioId,{branchAt=null}={}) {
   let s={g:1,i:1,p:1,h:1,u:1};
   const rows=[{t:0,...s}];
   const base=parameters(m,scenarioId), intervention=parameters(m,scenarioId,true);
+  // An experiment that changes no parameter must preserve the original trajectory.
+  const eventAt=Object.keys(base).some(key=>base[key]!==intervention[key])?branchAt:null;
   for(let n=0;n<count;n++){
     const t=n*dt;
     // Split an integration step exactly at an intervention event.
-    const cuts=branchAt!==null&&branchAt>t&&branchAt<t+dt ? [branchAt-t,t+dt-branchAt] : [dt];
+    const cuts=eventAt!==null&&eventAt>t&&eventAt<t+dt ? [eventAt-t,t+dt-eventAt] : [dt];
     let cursor=t;
-    for(const delta of cuts){
-      const d=derivative(m,cursor,s,branchAt!==null&&cursor>=branchAt-1e-10?intervention:base);
+    for(const [cutIndex,delta] of cuts.entries()){
+      const d=derivative(m,cursor,s,eventAt!==null&&cursor>=eventAt-1e-10?intervention:base);
       s={...s,...Object.fromEntries(Object.entries(d).map(([k,v])=>[k,clamp(s[k]+v*delta)]))};
       cursor+=delta;
+      if(cuts.length===2&&cutIndex===0)rows.push({t:eventAt,...s});
     }
     rows.push({t:(n+1)*dt,...s});
   }
@@ -58,8 +61,13 @@ export function simulate(m,scenarioId,{branchAt=null}={}) {
 }
 export function sample(rows,time){
   if(!Number.isFinite(time))throw new Error('Invalid time');
+  if(!Array.isArray(rows)||rows.length===0)throw new Error('Empty trajectory');
+  if(rows.length===1)return {...rows[0]};
   const t=Math.max(0,Math.min(rows.at(-1).t,time));
-  const i=Math.min(rows.length-2,Math.floor(t/rows.at(-1).t*(rows.length-1)));
+  // Event knots make trajectories nonuniform. Locate the actual enclosing interval.
+  let low=0,high=rows.length-1;
+  while(high-low>1){const mid=Math.floor((low+high)/2);if(rows[mid].t<=t)low=mid;else high=mid;}
+  const i=low;
   const a=rows[i],b=rows[i+1],r=(t-a.t)/(b.t-a.t);
   return Object.fromEntries(Object.keys(a).map(k=>[k,a[k]+(b[k]-a[k])*r]));
 }
